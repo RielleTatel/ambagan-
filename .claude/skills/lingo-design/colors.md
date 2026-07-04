@@ -1,78 +1,110 @@
-# Color Tokens
+# Color Tokens — Forest & Gold
+
+A deep-forest / warm-gold palette. Feels established, trustworthy, slightly premium — built for a financial app.
+
+**Anchor values (from the reference palette):**
+
+| Role | Hex |
+|---|---|
+| Primary (deep forest) | `#1A4731` |
+| Action (mid forest — buttons) | `#2D7A4F` |
+| Surface (pale mint — pill/badge bg) | `#E8F5EE` |
+| Accent (warm gold) | `#C9962A` |
+| Warm bg (cream page background) | `#F5F0E8` |
+| Danger | `#E24B4A` |
 
 ## Background Tokens
 
 ### Neutral
 | Token | Light | Dark |
 |---|---|---|
-| neutral-primary-soft | #FFFFFF | #131F24 |
-| neutral-primary | #FFFFFF | #131F24 |
-| neutral-primary-medium | #FFFFFF | #1F2C30 |
-| neutral-primary-strong | #FFFFFF | #2A3438 |
-| neutral-secondary-soft | #FFFFFF | #131F24 |
-| neutral-secondary | #FFFFFF | #131F24 |
-| neutral-secondary-medium | #F7F7F7 | #1F2C30 |
-| neutral-secondary-strong | #F7F7F7 | #2A3438 |
-| neutral-tertiary-soft | #F7F7F7 | #131F24 |
-| neutral-tertiary | #F7F7F7 | #1F2C30 |
-| neutral-tertiary-medium | #E5E5E5 | #2A3438 |
-| neutral-quaternary | #E5E5E5 | #37464F |
-| quaternary-medium | #DBDBDB | #37464F |
-| gray | #AFAFAF | #4B6B7C |
+| neutral-primary-soft | #FFFFFF | #0E1A15 |
+| neutral-primary | #FFFFFF | #0E1A15 |
+| neutral-primary-medium | #FFFFFF | #152720 |
+| neutral-primary-strong | #FFFFFF | #1D332B |
+| neutral-secondary-soft | #FFFFFF | #0E1A15 |
+| neutral-secondary | #FFFFFF | #0E1A15 |
+| neutral-secondary-medium | #FAF6EE | #152720 |
+| neutral-secondary-strong | #FAF6EE | #1D332B |
+| neutral-tertiary-soft | #F5F0E8 | #0E1A15 |
+| neutral-tertiary | #F5F0E8 | #152720 |
+| neutral-tertiary-medium | #ECE4D3 | #1D332B |
+| neutral-quaternary | #DED4BE | #2A403A |
+| quaternary-medium | #CFC4AC | #2A403A |
+| gray | #8A8578 | #5A6F65 |
+| warm-bg | #F5F0E8 | #0E1A15 |
 
-### Brand
+### Brand (Forest)
 | Token | Light | Dark |
 |---|---|---|
-| brand-softer | #E5FFC2 | #1A3300 |
-| brand-soft | #C7F8A1 | #2D5500 |
-| brand | #58CC03 | #58CC03 |
-| brand-medium | #89E219 | #4A8A02 |
-| brand-strong | #58A700 | #89E219 |
+| brand-softer | #E8F5EE | #0F2A1D |
+| brand-soft | #C3E4D2 | #1A4731 |
+| brand | #2D7A4F | #4A9C6D |
+| brand-medium | #256842 | #6BB889 |
+| brand-strong | #1A4731 | #A3D9B5 |
+
+### Accent (Gold)
+| Token | Light | Dark |
+|---|---|---|
+| accent-softer | #FBF3DE | #3A2A0D |
+| accent-soft | #F4E1B2 | #6B4E17 |
+| accent | #C9962A | #E6B142 |
+| accent-medium | #A57A1F | #F0C560 |
+| accent-strong | #7A5A15 | #F7DC94 |
+
+### Surface
+| Token | Light | Dark |
+|---|---|---|
+| surface | #E8F5EE | #1A4731 |
+| surface-warm | #FBF3DE | #3A2A0D |
 
 ### Status
 | Token | Light | Dark |
 |---|---|---|
-| success-soft | #E5FFC2 | #1A3300 |
-| success | #58CC02 | #58CC02 |
-| success-medium | #C7F8A1 | #2D5500 |
-| success-strong | #58A700 | #89E219 |
-| danger-soft | #FFE5E5 | #4A0000 |
-| danger | #FF4B4B | #FF4B4B |
-| danger-medium | #FFC4C4 | #8A0000 |
-| danger-strong | #E62E2E | #FF7373 |
-| warning-soft | #FFF8E0 | #4A3700 |
-| warning | #FFC800 | #FFC800 |
-| warning-medium | #FFE89B | #8A6F00 |
-| warning-strong | #E6B400 | #FFD41F |
+| success-soft | #E8F5EE | #0F2A1D |
+| success | #2D7A4F | #4A9C6D |
+| success-medium | #C3E4D2 | #1A4731 |
+| success-strong | #1A4731 | #A3D9B5 |
+| danger-soft | #FBE5E5 | #3A0F0F |
+| danger | #E24B4A | #E24B4A |
+| danger-medium | #F4B8B8 | #7A1F1F |
+| danger-strong | #B03332 | #F08080 |
+| warning-soft | #FBF3DE | #3A2A0D |
+| warning | #C9962A | #E6B142 |
+| warning-medium | #F4E1B2 | #6B4E17 |
+| warning-strong | #7A5A15 | #F7DC94 |
 
-### Button Drop Shadow (CSS custom properties, used for the flat 4px drop-shadow under buttons)
+### Button Drop Shadow (CSS custom properties for the flat 4px drop-shadow under buttons)
 | Variable | Light | Dark |
 |---|---|---|
-| `--shadow-brand` | #58A700 | #3D7400 |
-| `--shadow-success` | #58A700 | #3D7400 |
-| `--shadow-danger` | #E62E2E | #B71F1F |
-| `--shadow-warning` | #E6B400 | #B38C00 |
-| `--shadow-secondary` | #E5E5E5 | #2A3438 |
+| `--shadow-brand` | #1A4731 | #256842 |
+| `--shadow-success` | #1A4731 | #256842 |
+| `--shadow-danger` | #B03332 | #7A1F1F |
+| `--shadow-warning` | #7A5A15 | #6B4E17 |
+| `--shadow-accent` | #7A5A15 | #6B4E17 |
+| `--shadow-secondary` | #DED4BE | #1D332B |
 | `--shadow-dark` | #2A2A2A | #000000 |
 
 ### Utility
 | Token | Light | Dark |
 |---|---|---|
-| dark | #4B4B4B | #4B4B4B |
-| dark-strong | #3C3C3C | #2A2A2A |
-| disabled | #F7F7F7 | #1F2C30 |
+| dark | #3E3E3E | #3E3E3E |
+| dark-strong | #2A2A2A | #1A1A1A |
+| disabled | #F5F0E8 | #152720 |
 
-### Accent
+### Fun Accents (for streak badges, milestone celebrations, purpose-tag chips)
 | Token | Value (same both modes) |
 |---|---|
-| purple | #CE82FF |
-| sky | #1CB0F6 |
-| teal | #00CD9C |
-| pink | #FF86D0 |
-| cyan | #1CB0F6 |
-| fuchsia | #DD3EFF |
-| indigo | #8549BA |
-| orange | #FF9600 |
+| purple | #8B5FBF |
+| sky | #3B8FB5 |
+| teal | #2A8F7A |
+| pink | #C96B8A |
+| cyan | #3B8FB5 |
+| fuchsia | #A03FB5 |
+| indigo | #5A3F8F |
+| orange | #C97A2A |
+
+*Note: fun accents are muted from the Duolingo palette to sit alongside the premium forest/gold main palette without clashing. Use sparingly — for purpose tags on loans (Emergency, Education, Livelihood, Health, Other) and streak milestone badges.*
 
 ## Text Color Tokens
 
@@ -80,86 +112,100 @@
 | Token | Light | Dark |
 |---|---|---|
 | white | #FFFFFF | #FFFFFF |
-| black | #3C3C3C | #3C3C3C |
-| heading | #4B4B4B | #FFFFFF |
-| body | #777777 | #AFAFAF |
-| body-subtle | #AFAFAF | #777777 |
+| black | #1A1A1A | #F5F0E8 |
+| heading | #1A4731 | #F5F0E8 |
+| body | #5A5A5A | #C4BFB1 |
+| body-subtle | #8A8578 | #8A8578 |
 
-### Brand
+### Brand (Forest text)
 | Token | Light | Dark |
 |---|---|---|
-| fg-brand-subtle | #C7F8A1 | #2D5500 |
-| fg-brand | #58A700 | #89E219 |
-| fg-brand-strong | #3D7400 | #C7F8A1 |
+| fg-brand-subtle | #C3E4D2 | #1A4731 |
+| fg-brand | #1A4731 | #A3D9B5 |
+| fg-brand-strong | #0F2A1D | #C3E4D2 |
+
+### Accent (Gold text)
+| Token | Light | Dark |
+|---|---|---|
+| fg-accent-subtle | #F4E1B2 | #6B4E17 |
+| fg-accent | #7A5A15 | #E6B142 |
+| fg-accent-strong | #5A4210 | #F7DC94 |
 
 ### Status
 | Token | Light | Dark |
 |---|---|---|
-| fg-success | #58A700 | #89E219 |
-| fg-success-strong | #3D7400 | #C7F8A1 |
-| fg-danger | #E62E2E | #FF7373 |
-| fg-danger-strong | #B71F1F | #FFB0B0 |
-| fg-warning-subtle | #E6B400 | #FFC800 |
-| fg-warning | #8A6F00 | #FFD41F |
-| fg-disabled | #AFAFAF | #777777 |
+| fg-success | #1A4731 | #A3D9B5 |
+| fg-success-strong | #0F2A1D | #C3E4D2 |
+| fg-danger | #B03332 | #F08080 |
+| fg-danger-strong | #7A1F1F | #FBB8B8 |
+| fg-warning-subtle | #C9962A | #E6B142 |
+| fg-warning | #7A5A15 | #F0C560 |
+| fg-disabled | #8A8578 | #5A6F65 |
 
-### Informational / Accent
+### Informational / Accent (for badges, chips)
 | Token | Light | Dark |
 |---|---|---|
-| fg-yellow | #FFC800 | #FFC800 |
-| fg-info | #0E84B5 | #84D8F8 |
-| fg-purple | #CE82FF | #CE82FF |
-| fg-purple-strong | #8549BA | #DDB7FF |
-| fg-cyan | #1CB0F6 | #84D8F8 |
-| fg-indigo | #8549BA | #8549BA |
-| fg-pink | #FF86D0 | #FF86D0 |
-| fg-lime | #58CC02 | #89E219 |
+| fg-yellow | #C9962A | #E6B142 |
+| fg-info | #3B8FB5 | #6BB5D9 |
+| fg-purple | #8B5FBF | #B08FD9 |
+| fg-purple-strong | #5A3F8F | #C9AFDF |
+| fg-cyan | #3B8FB5 | #6BB5D9 |
+| fg-indigo | #5A3F8F | #8B6FBF |
+| fg-pink | #C96B8A | #E29AB0 |
+| fg-lime | #2D7A4F | #4A9C6D |
 
 ## Border Color Tokens
 
 | Token | Light | Dark |
 |---|---|---|
-| border-dark | #4B4B4B | #AFAFAF |
-| border-buffer | #FFFFFF | #131F24 |
-| border-buffer-medium | #FFFFFF | #1F2C30 |
-| border-buffer-strong | #FFFFFF | #2A3438 |
-| border-muted | #F7F7F7 | #131F24 |
-| border-light-subtle | #F7F7F7 | #131F24 |
-| border-light | #F7F7F7 | #1F2C30 |
-| border-light-medium | #F7F7F7 | #2A3438 |
-| border-default-subtle | #E5E5E5 | #131F24 |
-| border-default | #E5E5E5 | #37464F |
-| border-default-medium | #E5E5E5 | #37464F |
-| border-default-strong | #DBDBDB | #4B6B7C |
-| border-success-subtle | #C7F8A1 | #2D5500 |
-| border-success | #58A700 | #89E219 |
-| border-danger-subtle | #FFC4C4 | #8A0000 |
-| border-danger | #E62E2E | #FF7373 |
-| border-warning-subtle | #FFE89B | #8A6F00 |
-| border-warning | #E6B400 | #FFC800 |
-| border-brand-subtle | #C7F8A1 | #2D5500 |
-| border-brand-light | #89E219 | #89E219 |
-| border-brand | #58CC03 | #89E219 |
-| border-dark-subtle | #4B4B4B | #2A3438 |
-| border-purple | #CE82FF | #CE82FF |
-| border-orange | #FF9600 | #FF9600 |
+| border-dark | #3E3E3E | #C4BFB1 |
+| border-buffer | #FFFFFF | #0E1A15 |
+| border-buffer-medium | #FFFFFF | #152720 |
+| border-buffer-strong | #FFFFFF | #1D332B |
+| border-muted | #F5F0E8 | #0E1A15 |
+| border-light-subtle | #F5F0E8 | #0E1A15 |
+| border-light | #ECE4D3 | #152720 |
+| border-light-medium | #ECE4D3 | #1D332B |
+| border-default-subtle | #DED4BE | #0E1A15 |
+| border-default | #DED4BE | #2A403A |
+| border-default-medium | #CFC4AC | #2A403A |
+| border-default-strong | #B8AC90 | #5A6F65 |
+| border-success-subtle | #C3E4D2 | #1A4731 |
+| border-success | #1A4731 | #A3D9B5 |
+| border-danger-subtle | #F4B8B8 | #7A1F1F |
+| border-danger | #B03332 | #F08080 |
+| border-warning-subtle | #F4E1B2 | #6B4E17 |
+| border-warning | #C9962A | #E6B142 |
+| border-brand-subtle | #C3E4D2 | #1A4731 |
+| border-brand-light | #4A9C6D | #4A9C6D |
+| border-brand | #2D7A4F | #A3D9B5 |
+| border-accent-subtle | #F4E1B2 | #6B4E17 |
+| border-accent | #C9962A | #E6B142 |
+| border-dark-subtle | #3E3E3E | #1D332B |
+| border-purple | #8B5FBF | #B08FD9 |
+| border-orange | #C97A2A | #E6A050 |
 
 ## Semantic Usage Rules
 
-- Page/section backgrounds: neutral-primary-soft (default white) — every section uses a white background
-- Primary buttons: brand background (vivid green)
-- Headings: heading text color (Eel)
-- Body text: body text color (Wolf)
-- CTA links: fg-brand text color
-- Default borders: border-default at 2px width
-- Status borders match intent: success → border-success, danger → border-danger, warning → border-warning
-- Disabled: disabled background + fg-disabled text
+- **Page background:** `warm-bg` cream (`#F5F0E8`) — every route's outer container
+- **Card / section background:** `neutral-primary` pure white (`#FFFFFF`) inside a `warm-bg` page
+- **Primary CTA button:** `brand` forest green (`#2D7A4F`) with `white` text and `border-brand`
+- **Secondary button:** `white` background, `brand` border, `fg-brand` text
+- **Success / positive chips:** `surface` mint background (`#E8F5EE`) with `fg-brand-strong` text
+- **Accent / warning chips (e.g., "3 votes open"):** `surface-warm` (`#FBF3DE`) with `fg-accent` text
+- **Headings:** `heading` — deep forest in light mode, cream in dark mode
+- **Body text:** `body` for paragraphs, `body-subtle` for meta text
+- **Default borders:** `border-default` (`#DED4BE`) at 2px width
+- **Status borders match intent:** success → `border-success`, danger → `border-danger`, warning → `border-warning`, accent/gold → `border-accent`
+- **Disabled:** `disabled` background + `fg-disabled` text
+- **Purpose tags on loans** (Emergency, Education, Livelihood, Health, Other) — use fun accents (`fg-purple`, `fg-info`, `fg-lime`, `fg-pink`, `fg-orange`) with corresponding subtle backgrounds
 
 ## Prohibited
 
 - No raw hex/rgb values in component code — always use design tokens
 - No brand text color for long-form paragraphs
-- No accent text tokens (fg-purple, etc.) for body copy or navigation
-- No brand/accent backgrounds for large layout surfaces (pages, sections) unless it's a hero/campaign area
+- No accent text tokens (`fg-purple`, etc.) for body copy or navigation
+- No brand/accent backgrounds for large layout surfaces (pages, sections) — reserve for buttons, chips, and hero elements
 - No manual light/dark value swapping — let the CSS custom properties handle it
-- No off-white or tinted section backgrounds — sections must use pure white (#FFFFFF)
+- No pure white (`#FFFFFF`) page backgrounds — the page uses `warm-bg` cream. Cards on top of the page use white.
+- No vivid Duolingo-style bright greens — this palette is muted, forest, financial

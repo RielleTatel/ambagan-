@@ -1,6 +1,6 @@
 ---
 name: lingo-design
-description: Use when writing or editing any UI code in this project — components, pages, layouts, forms, styling. Defines the Ambagan visual design language (bold, friendly, gamified-learning aesthetic — pure white backgrounds, vivid grass-green brand, 2px borders, 12px radius, tactile buttons with flat drop-shadow). Read the module files referenced below before generating JSX.
+description: Use when writing or editing any UI code in this project — components, pages, layouts, forms, styling. Defines the Ambagan visual design language (Forest & Gold — deep forest green primary, warm gold accent, mint surfaces on cream page background, 2px borders, 12px radius, tactile buttons with flat drop-shadow). Established, trustworthy, slightly premium — built for a financial app. Read the module files referenced below before generating JSX.
 ---
 
 # Design System — Agent Instructions
@@ -8,7 +8,7 @@ description: Use when writing or editing any UI code in this project — compone
 This skill describes the visual design language for all UI output. Every component, layout, and page should follow the design specs in the module files below. These describe *what the design looks like* — you choose how to implement the styles.
 
 ## Style
-A bold, friendly, gamified-learning interface inspired by playful language-learning apps — pure white backgrounds, vivid grass-green brand color, chunky 2px borders, fully rounded soft shapes (12px), bold rounded display typography, and tactile buttons with a flat drop-shadow that gives every action a pressable, physical feel.
+Forest & Gold — an established, trustworthy, slightly premium interface built for a financial app. Deep forest green (`#1A4731`) as the primary, warm gold (`#C9962A`) as the accent, mint surfaces (`#E8F5EE`) for pill badges and success states, and a warm cream (`#F5F0E8`) page background instead of clinical white. Chunky 2px borders, fully rounded soft shapes (12px), bold rounded display typography, and tactile buttons with a flat drop-shadow that gives every action a pressable, physical feel.
 
 ## Before Writing Any Code
 
@@ -22,7 +22,7 @@ A bold, friendly, gamified-learning interface inspired by playful language-learn
 - **Dark mode is automatic.** The CSS custom properties resolve differently in light/dark via `@media (prefers-color-scheme: dark)`. Never manually swap colors.
 - **Every interactive element needs hover, focus, and disabled states** — defined in the relevant module.
 - **Use semantic HTML:** proper heading hierarchy (`h1`→`h6`), `<button>` for actions, `<a>` for navigation, ARIA attributes where needed.
-- **All section backgrounds are pure white** — never tint a section background; use 2px borders to delimit sections instead.
+- **Page backgrounds are Warm bg cream (`#F5F0E8`); card/section backgrounds are pure white (`#FFFFFF`)** — never tint a card background beyond white or mint (`surface`); use 2px borders to delimit sections.
 - **All borders for delimiting sections, cards, and inputs are 2px wide.**
 - **All elements use a 12px border-radius** unless they are explicitly pills, avatars, or dot indicators (9999px).
 - **Buttons use a flat `0 4px 0` drop-shadow** in a darker tone of their variant — no glint or gradient highlight effects.
