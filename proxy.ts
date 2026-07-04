@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { hasEnvVars } from "@/lib/utils";
 
 const PROTECTED_PREFIXES = [
   "/dashboard",
@@ -10,8 +11,15 @@ const PROTECTED_PREFIXES = [
   "/onboarding",
 ];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
+
+  // If Supabase env vars aren't set (e.g., fresh clone, misconfigured .env),
+  // skip the auth check rather than crash every request with an opaque
+  // "Invalid supabaseUrl" error. Populate .env.local to re-enable guarding.
+  if (!hasEnvVars) {
+    return supabaseResponse;
+  }
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

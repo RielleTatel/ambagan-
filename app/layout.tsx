@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
-import { ThemeProvider } from "next-themes";
+import { Nunito } from "next/font/google";
 import "./globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -14,8 +13,9 @@ export const metadata: Metadata = {
     "A community savings and lending platform built on Stellar. Pool contributions, vote on loans, and keep every transaction verifiable on-chain.",
 };
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const nunito = Nunito({
+  variable: "--font-nunito",
+  weight: ["400", "500", "700", "800"],
   display: "swap",
   subsets: ["latin"],
 });
@@ -27,16 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.className} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
-      </body>
+      <body className={`${nunito.variable} antialiased`}>{children}</body>
     </html>
   );
 }

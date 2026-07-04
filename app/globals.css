@@ -4,65 +4,204 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    /* Forest & Gold design tokens (light mode) */
+    --warm-bg: #F5F0E8;
+    --neutral-primary: #FFFFFF;
+    --surface: #E8F5EE;
+    --surface-warm: #FBF3DE;
+
+    --brand: #2D7A4F;
+    --brand-medium: #256842;
+    --brand-strong: #1A4731;
+    --brand-soft: #C3E4D2;
+    --brand-softer: #E8F5EE;
+
+    --accent: #C9962A;
+    --accent-medium: #A57A1F;
+    --accent-strong: #7A5A15;
+    --accent-soft: #F4E1B2;
+    --accent-softer: #FBF3DE;
+
+    --success: #2D7A4F;
+    --success-soft: #E8F5EE;
+    --danger: #E24B4A;
+    --danger-soft: #FBE5E5;
+    --danger-strong: #B03332;
+    --warning: #C9962A;
+    --warning-soft: #FBF3DE;
+
+    --heading: #1A4731;
+    --body: #5A5A5A;
+    --body-subtle: #8A8578;
+    --fg-brand: #1A4731;
+    --fg-brand-strong: #0F2A1D;
+    --fg-accent: #7A5A15;
+    --fg-disabled: #8A8578;
+
+    --border-default: #DED4BE;
+    --border-default-strong: #B8AC90;
+    --border-brand: #2D7A4F;
+    --border-brand-subtle: #C3E4D2;
+    --border-danger: #B03332;
+    --border-accent: #C9962A;
+
+    --disabled: #F5F0E8;
+
+    /* Button drop-shadow tokens */
+    --shadow-brand: #1A4731;
+    --shadow-secondary: #DED4BE;
+    --shadow-success: #1A4731;
+    --shadow-danger: #B03332;
+    --shadow-warning: #7A5A15;
+    --shadow-accent: #7A5A15;
+    --shadow-dark: #2A2A2A;
+
+    --radius: 12px;
+
+    /* shadcn HSL tokens (kept for backwards compat with untouched primitives) */
+    --background: 43 34% 93%;
+    --foreground: 148 47% 19%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --card-foreground: 148 47% 19%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
+    --popover-foreground: 148 47% 19%;
+    --primary: 145 46% 33%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 32% 88%;
+    --secondary-foreground: 148 47% 19%;
+    --muted: 43 34% 93%;
+    --muted-foreground: 0 0% 35%;
+    --accent-hsl: 40 66% 47%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 1 72% 59%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 41 32% 81%;
+    --input: 41 32% 81%;
+    --ring: 145 46% 33%;
   }
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --warm-bg: #0E1A15;
+      --neutral-primary: #152720;
+      --surface: #1A4731;
+      --surface-warm: #3A2A0D;
+
+      --brand: #4A9C6D;
+      --brand-medium: #6BB889;
+      --brand-strong: #A3D9B5;
+      --brand-soft: #1A4731;
+      --brand-softer: #0F2A1D;
+
+      --accent: #E6B142;
+      --accent-medium: #F0C560;
+      --accent-strong: #F7DC94;
+      --accent-soft: #6B4E17;
+      --accent-softer: #3A2A0D;
+
+      --success: #4A9C6D;
+      --success-soft: #0F2A1D;
+      --danger: #E24B4A;
+      --danger-soft: #3A0F0F;
+      --danger-strong: #F08080;
+      --warning: #E6B142;
+      --warning-soft: #3A2A0D;
+
+      --heading: #F5F0E8;
+      --body: #C4BFB1;
+      --body-subtle: #8A8578;
+      --fg-brand: #A3D9B5;
+      --fg-brand-strong: #C3E4D2;
+      --fg-accent: #E6B142;
+      --fg-disabled: #5A6F65;
+
+      --border-default: #2A403A;
+      --border-default-strong: #5A6F65;
+      --border-brand: #A3D9B5;
+      --border-brand-subtle: #1A4731;
+      --border-danger: #F08080;
+      --border-accent: #E6B142;
+
+      --disabled: #152720;
+
+      --shadow-brand: #256842;
+      --shadow-secondary: #1D332B;
+      --shadow-success: #256842;
+      --shadow-danger: #7A1F1F;
+      --shadow-warning: #6B4E17;
+      --shadow-accent: #6B4E17;
+      --shadow-dark: #000000;
+
+      --background: 148 32% 8%;
+      --foreground: 43 34% 93%;
+      --card: 156 29% 12%;
+      --card-foreground: 43 34% 93%;
+      --popover: 156 29% 12%;
+      --popover-foreground: 43 34% 93%;
+      --primary: 145 36% 45%;
+      --primary-foreground: 0 0% 100%;
+      --secondary: 156 22% 15%;
+      --secondary-foreground: 43 34% 93%;
+      --muted: 156 22% 15%;
+      --muted-foreground: 41 15% 65%;
+      --accent-hsl: 40 76% 58%;
+      --accent-foreground: 0 0% 12%;
+      --destructive: 1 72% 59%;
+      --destructive-foreground: 0 0% 100%;
+      --border: 158 20% 20%;
+      --input: 158 20% 20%;
+      --ring: 145 36% 60%;
+    }
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: var(--border-default);
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--warm-bg);
+    color: var(--body);
+    font-family: var(--font-nunito), "DIN 2014 Rounded", ui-sans-serif, system-ui, sans-serif;
+    font-feature-settings: "ss01" on, "cv11" on;
   }
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--heading);
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    line-height: 1.15;
+  }
+  h1 { font-size: 28px; letter-spacing: -0.4px; line-height: 1.1; }
+  h2 { font-size: 24px; letter-spacing: -0.3px; }
+  h3 { font-size: 22px; }
+  h4 { font-size: 20px; }
+  h5 { font-size: 18px; }
+  h6 { font-size: 16px; }
+  @media (min-width: 768px) {
+    h1 { font-size: 36px; }
+    h2 { font-size: 32px; }
+    h3 { font-size: 26px; }
+    h4 { font-size: 22px; }
+    h5 { font-size: 20px; }
+    h6 { font-size: 18px; }
+  }
+  @media (min-width: 1024px) {
+    h1 { font-size: 48px; }
+    h2 { font-size: 36px; }
+    h3 { font-size: 28px; }
+    h4 { font-size: 24px; }
+    h5 { font-size: 20px; }
+    h6 { font-size: 18px; }
+  }
+}
+
+/* Tactile button drop-shadow utilities */
+@layer utilities {
+  .btn-shadow-brand { box-shadow: 0 4px 0 var(--shadow-brand); }
+  .btn-shadow-secondary { box-shadow: 0 4px 0 var(--shadow-secondary); }
+  .btn-shadow-danger { box-shadow: 0 4px 0 var(--shadow-danger); }
+  .btn-shadow-accent { box-shadow: 0 4px 0 var(--shadow-accent); }
+  .btn-shadow-dark { box-shadow: 0 4px 0 var(--shadow-dark); }
+  .btn-shadow-pressed { box-shadow: 0 2px 0 var(--shadow-secondary); transform: translateY(2px); }
+  .card-shadow-xs { box-shadow: 0 2px 0 var(--border-default); }
 }

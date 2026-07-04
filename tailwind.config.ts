@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 export default {
-  darkMode: ["class"],
+  darkMode: "media",
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -11,6 +11,54 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Forest & Gold semantic tokens (from lingo-design skill)
+        "warm-bg": "var(--warm-bg)",
+        "neutral-primary": "var(--neutral-primary)",
+        surface: "var(--surface)",
+        "surface-warm": "var(--surface-warm)",
+        brand: {
+          DEFAULT: "var(--brand)",
+          medium: "var(--brand-medium)",
+          strong: "var(--brand-strong)",
+          soft: "var(--brand-soft)",
+          softer: "var(--brand-softer)",
+        },
+        accent: {
+          DEFAULT: "var(--accent)",
+          medium: "var(--accent-medium)",
+          strong: "var(--accent-strong)",
+          soft: "var(--accent-soft)",
+          softer: "var(--accent-softer)",
+        },
+        success: {
+          DEFAULT: "var(--success)",
+          soft: "var(--success-soft)",
+        },
+        danger: {
+          DEFAULT: "var(--danger)",
+          soft: "var(--danger-soft)",
+          strong: "var(--danger-strong)",
+        },
+        warning: {
+          DEFAULT: "var(--warning)",
+          soft: "var(--warning-soft)",
+        },
+        heading: "var(--heading)",
+        body: "var(--body)",
+        "body-subtle": "var(--body-subtle)",
+        "fg-brand": "var(--fg-brand)",
+        "fg-brand-strong": "var(--fg-brand-strong)",
+        "fg-accent": "var(--fg-accent)",
+        "fg-disabled": "var(--fg-disabled)",
+        "border-default": "var(--border-default)",
+        "border-default-strong": "var(--border-default-strong)",
+        "border-brand": "var(--border-brand)",
+        "border-brand-subtle": "var(--border-brand-subtle)",
+        "border-danger": "var(--border-danger)",
+        "border-accent": "var(--border-accent)",
+        disabled: "var(--disabled)",
+
+        // shadcn HSL tokens (kept so untouched primitives still work)
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -33,10 +81,6 @@ export default {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
         },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
@@ -44,18 +88,21 @@ export default {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        chart: {
-          "1": "hsl(var(--chart-1))",
-          "2": "hsl(var(--chart-2))",
-          "3": "hsl(var(--chart-3))",
-          "4": "hsl(var(--chart-4))",
-          "5": "hsl(var(--chart-5))",
-        },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        DEFAULT: "12px",
+        lg: "12px",
+        md: "12px",
+        sm: "12px",
+        full: "9999px",
+      },
+      fontFamily: {
+        sans: ["var(--font-nunito)", "DIN 2014 Rounded", "ui-sans-serif", "system-ui", "sans-serif"],
+      },
+      boxShadow: {
+        xs: "0 2px 0 var(--border-default)",
+        sm: "0 2px 0 var(--border-default)",
+        md: "0 4px 0 var(--border-default)",
       },
     },
   },

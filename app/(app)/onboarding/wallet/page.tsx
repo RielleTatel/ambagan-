@@ -1,7 +1,30 @@
-export default function WalletOnboardingPage() {
+import { redirect } from "next/navigation";
+import { createClient } from "@/utils/supabase/server";
+import { WalletProvisioner } from "./wallet-provisioner";
+
+export default async function WalletOnboardingPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("stellar_public_key")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.stellar_public_key) {
+    redirect("/dashboard");
+  }
+
   return (
-    <main className="p-6">
-      <h1 className="text-2xl font-semibold">Wallet setup</h1>
+    <main className="flex min-h-svh items-center justify-center p-6">
+      <WalletProvisioner />
     </main>
   );
 }
