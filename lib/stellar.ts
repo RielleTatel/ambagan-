@@ -172,11 +172,12 @@ export async function setupGroupMultisig(
   }
 
   // Set thresholds:
-  // masterWeight 0 — the group account itself can't sign alone
   // low/med/high threshold = number of member signatures required
   builder.addOperation(
     StellarSdk.Operation.setOptions({
-      masterWeight: 0,
+      // Phase 2: keep master signing weight so the server can add signers on join.
+      // Phase 4 hardens this to 0 once multi-party signature collection lands.
+      masterWeight: 1,
       lowThreshold: threshold,
       medThreshold: threshold,
       highThreshold: threshold,
@@ -212,4 +213,44 @@ export async function getAccountPayments(publicKey: string, limit = 20) {
     .call()
 
   return payments.records
+}
+
+// Add a new member as signer and update the group's on-chain threshold
+// in a single transaction. Signed by the group's master keypair; if the
+// current threshold requires more weight than the master alone provides,
+// the admin's secret is also used to reach the threshold.
+export async function addGroupSignerAndUpdateThreshold(
+  groupSecret: string,
+  newSignerPublicKey: string,
+  newThreshold: number,
+  adminSecret?: string,
+) {
+  const groupKeypair = StellarSdk.Keypair.fromSecret(groupSecret)
+  const account = await horizonServer.loadAccount(groupKeypair.publicKey())
+
+  const tx = new StellarSdk.TransactionBuilder(account, {
+    fee: StellarSdk.BASE_FEE,
+    networkPassphrase: NETWORK_PASSPHRASE,
+  })
+    .addOperation(
+      StellarSdk.Operation.setOptions({
+        signer: { ed25519PublicKey: newSignerPublicKey, weight: 1 },
+      }),
+    )
+    .addOperation(
+      StellarSdk.Operation.setOptions({
+        lowThreshold: newThreshold,
+        medThreshold: newThreshold,
+        highThreshold: newThreshold,
+      }),
+    )
+    .setTimeout(30)
+    .build()
+
+  tx.sign(groupKeypair)
+  if (adminSecret) {
+    tx.sign(StellarSdk.Keypair.fromSecret(adminSecret))
+  }
+
+  return horizonServer.submitTransaction(tx)
 }
