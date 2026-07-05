@@ -265,3 +265,37 @@ export async function addGroupSignerAndUpdateThreshold(
 
   return horizonServer.submitTransaction(tx)
 }
+
+// Disburse a loan: pay borrower from group account, signed by group master
+// plus additional member secrets to satisfy the on-chain threshold.
+export async function disburseLoan(
+  groupSecret: string,
+  borrowerPublicKey: string,
+  amount: string,
+  extraSignerSecrets: string[],
+): Promise<{ hash: string }> {
+  const groupKp = StellarSdk.Keypair.fromSecret(groupSecret)
+  const account = await horizonServer.loadAccount(groupKp.publicKey())
+
+  const tx = new StellarSdk.TransactionBuilder(account, {
+    fee: StellarSdk.BASE_FEE,
+    networkPassphrase: NETWORK_PASSPHRASE,
+  })
+    .addOperation(
+      StellarSdk.Operation.payment({
+        destination: borrowerPublicKey,
+        asset: getAMBPHP(),
+        amount,
+      }),
+    )
+    .setTimeout(30)
+    .build()
+
+  tx.sign(groupKp)
+  for (const secret of extraSignerSecrets) {
+    tx.sign(StellarSdk.Keypair.fromSecret(secret))
+  }
+
+  const result = await horizonServer.submitTransaction(tx)
+  return { hash: result.hash }
+}

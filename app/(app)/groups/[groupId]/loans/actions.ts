@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { createClient } from '@/utils/supabase/server'
 import { computeRepaymentSchedule } from '@/lib/loan-math'
 import { computeThreshold, type VoteThreshold } from '@/lib/group-threshold'
+import { decryptSecret, disburseLoan } from '@/lib/stellar'
 
 export type PurposeTag = 'emergency' | 'education' | 'livelihood' | 'health' | 'other'
 
@@ -128,9 +129,74 @@ export async function voteOnLoan(input: {
   const approved = (approveCount ?? 0) >= threshold
 
   if (approved) {
+    const { data: loan } = await supabase
+      .from('loans')
+      .select('amount, borrower_id, status')
+      .eq('id', input.loanId)
+      .single()
+    if (!loan) return { ok: false, error: 'Loan disappeared during disbursement' }
+    if (loan.status !== 'voting') {
+      revalidatePath(`/groups/${input.groupId}/loans`)
+      return { ok: true, approved: true }
+    }
+
+    const { data: fullGroup } = await supabase
+      .from('groups')
+      .select('stellar_account_id, stellar_secret_encrypted')
+      .eq('id', input.groupId)
+      .single()
+    if (!fullGroup?.stellar_secret_encrypted || !fullGroup.stellar_account_id) {
+      return { ok: false, error: 'Group Stellar account not provisioned' }
+    }
+
+    const { data: borrowerProfile } = await supabase
+      .from('profiles')
+      .select('stellar_public_key')
+      .eq('id', loan.borrower_id)
+      .single()
+    if (!borrowerProfile?.stellar_public_key) {
+      return { ok: false, error: 'Borrower has no Stellar account' }
+    }
+
+    const extraNeeded = Math.max(0, threshold - 1)
+    const { data: approvers } = await supabase
+      .from('votes')
+      .select('voter_id, profiles:voter_id(stellar_secret_encrypted)')
+      .eq('loan_id', input.loanId)
+      .eq('vote', 'approve')
+      .limit(extraNeeded)
+
+    const extraSecrets = (approvers ?? [])
+      .map((a: any) => a.profiles?.stellar_secret_encrypted)
+      .filter((s: string | null | undefined): s is string => Boolean(s))
+      .map(decryptSecret)
+
+    if (extraSecrets.length < extraNeeded) {
+      return { ok: false, error: 'Not enough signer secrets available for disbursement' }
+    }
+
+    let disbursementHash: string
+    try {
+      const groupSecret = decryptSecret(fullGroup.stellar_secret_encrypted)
+      const result = await disburseLoan(
+        groupSecret,
+        borrowerProfile.stellar_public_key,
+        String(loan.amount),
+        extraSecrets,
+      )
+      disbursementHash = result.hash
+    } catch (err) {
+      return { ok: false, error: `Disbursement failed: ${(err as Error).message}` }
+    }
+
     await supabase
       .from('loans')
-      .update({ status: 'approved', approved_at: new Date().toISOString() })
+      .update({
+        status: 'disbursed',
+        approved_at: new Date().toISOString(),
+        disbursed_at: new Date().toISOString(),
+        stellar_tx_hash: disbursementHash,
+      })
       .eq('id', input.loanId)
   }
 
