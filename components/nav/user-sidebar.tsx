@@ -25,7 +25,7 @@ export async function UserSidebar() {
   return (
     <aside className="flex h-screen w-16 flex-col items-center border-r-2 border-border-default bg-neutral-primary py-4">
       <div className="flex flex-col items-center gap-2">
-        <IconNavItem href="/dashboard" label="Home" icon={Home} exact />
+        <IconNavItem href="/dashboard" label="Home" icon={<Home />} exact />
       </div>
 
       {groups.length > 0 && (
@@ -40,15 +40,15 @@ export async function UserSidebar() {
                 initial={g.name.charAt(0).toUpperCase()}
               />
             ))}
-            <IconNavItem href="/groups/new" label="Create a group" icon={Plus} exact />
+            <IconNavItem href="/groups/new" label="Create a group" icon={<Plus />} exact />
           </div>
         </>
       )}
 
       <div className="mt-auto flex flex-col items-center gap-2 pt-4">
-        <IconNavItem href="/notifications" label="Notifications" icon={Bell} />
-        <IconNavItem href="/profile" label="Profile" icon={User} />
-        <IconNavItem href="/settings" label="Settings" icon={Settings} />
+        <IconNavItem href="/notifications" label="Notifications" icon={<Bell />} />
+        <IconNavItem href="/profile" label="Profile" icon={<User />} />
+        <IconNavItem href="/settings" label="Settings" icon={<Settings />} />
       </div>
     </aside>
   );

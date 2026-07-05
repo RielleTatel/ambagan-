@@ -44,20 +44,20 @@ export async function GroupSidebar({ groupId }: GroupSidebarProps) {
       </div>
 
       <NavSection label="Overview">
-        <NavItem href={`/groups/${groupId}`} label="Dashboard" icon={LayoutDashboard} exact />
-        <NavItem href={`/groups/${groupId}/loans`} label="Loans" icon={HandCoins} />
+        <NavItem href={`/groups/${groupId}`} label="Dashboard" icon={<LayoutDashboard />} exact />
+        <NavItem href={`/groups/${groupId}/loans`} label="Loans" icon={<HandCoins />} />
       </NavSection>
 
       <NavSection label="History">
-        <NavItem href={`/groups/${groupId}/ledger`} label="Ledger" icon={ScrollText} />
-        <NavItem href={`/groups/${groupId}/repayments`} label="Repayments" icon={Calendar} />
+        <NavItem href={`/groups/${groupId}/ledger`} label="Ledger" icon={<ScrollText />} />
+        <NavItem href={`/groups/${groupId}/repayments`} label="Repayments" icon={<Calendar />} />
       </NavSection>
 
       {isAdmin && (
         <NavSection label="Admin">
-          <NavItem href={`/groups/${groupId}/admin`} label="Settings" icon={Settings} exact />
-          <NavItem href={`/groups/${groupId}/admin/defaults`} label="Defaults" icon={AlertTriangle} />
-          <NavItem href={`/groups/${groupId}/admin/export`} label="Export" icon={FileDown} />
+          <NavItem href={`/groups/${groupId}/admin`} label="Settings" icon={<Settings />} exact />
+          <NavItem href={`/groups/${groupId}/admin/defaults`} label="Defaults" icon={<AlertTriangle />} />
+          <NavItem href={`/groups/${groupId}/admin/export`} label="Export" icon={<FileDown />} />
         </NavSection>
       )}
     </aside>
