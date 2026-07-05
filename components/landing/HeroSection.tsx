@@ -1,76 +1,5 @@
+import Image from 'next/image'
 import Link from 'next/link'
-
-function DashboardMockup() {
-  return (
-    <div className="w-full max-w-sm rounded-xl border-2 border-border-default bg-neutral-primary shadow-md">
-      {/* Mockup header */}
-      <div className="flex items-center justify-between border-b-2 border-border-default px-5 py-3.5">
-        <span className="text-sm font-bold text-heading">Community Fund</span>
-        <span className="rounded-full border-2 border-border-brand-subtle bg-surface px-3 py-0.5 text-xs font-bold uppercase tracking-wide text-fg-brand-strong">Live</span>
-      </div>
-
-      <div className="flex flex-col gap-4 p-5">
-        {/* Balance */}
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wide text-body-subtle">Community Balance</p>
-          <p className="mt-1 text-3xl font-bold text-heading">₱50,000</p>
-          <p className="text-xs text-body-subtle">AMBPHP · Stellar Testnet</p>
-        </div>
-
-        {/* Stats row */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-xl border-2 border-border-default bg-warm-bg p-3">
-            <p className="text-xs font-bold uppercase tracking-wide text-body-subtle">Members</p>
-            <p className="mt-0.5 text-xl font-bold text-heading">12</p>
-          </div>
-          <div className="rounded-xl border-2 border-border-brand-subtle bg-surface p-3">
-            <p className="text-xs font-bold uppercase tracking-wide text-fg-brand-strong">Cycle</p>
-            <p className="mt-0.5 text-xl font-bold text-heading">4 / 12</p>
-          </div>
-        </div>
-
-        {/* Contribution progress */}
-        <div>
-          <div className="mb-1.5 flex items-center justify-between">
-            <p className="text-xs font-bold uppercase tracking-wide text-body-subtle">Contributions</p>
-            <p className="text-xs font-bold text-fg-brand-strong">10 of 12 paid</p>
-          </div>
-          <div className="h-2.5 overflow-hidden rounded-full border-2 border-border-default bg-warm-bg">
-            <div className="h-full rounded-full bg-brand" style={{ width: '83%' }} />
-          </div>
-        </div>
-
-        {/* Loan requests */}
-        <div>
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-body-subtle">Loan Requests</p>
-          <ul className="flex flex-col gap-1.5">
-            <li className="flex items-center justify-between rounded-xl border-2 border-border-warning-subtle bg-warning-soft px-3 py-2 text-xs">
-              <span className="font-semibold text-heading">Maria R.</span>
-              <span className="font-bold text-fg-warning">₱5,000 · Voting</span>
-            </li>
-            <li className="flex items-center justify-between rounded-xl border-2 border-border-brand-subtle bg-surface px-3 py-2 text-xs">
-              <span className="font-semibold text-heading">Juan D.</span>
-              <span className="font-bold text-fg-brand-strong">₱3,000 · Repaying</span>
-            </li>
-          </ul>
-        </div>
-
-        {/* Activity */}
-        <div>
-          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-body-subtle">Recent Activity</p>
-          <ul className="flex flex-col gap-1">
-            {['Ana M. contributed', 'Carlo S. contributed', 'Vote cast on loan'].map((item, i) => (
-              <li key={i} className="flex items-center gap-2 text-xs text-body">
-                <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </div>
-  )
-}
 
 export function HeroSection() {
   return (
@@ -117,9 +46,16 @@ export function HeroSection() {
             </p>
           </div>
 
-          {/* Right: dashboard mockup */}
-          <div className="flex w-full shrink-0 justify-center lg:w-auto">
-            <DashboardMockup />
+          {/* Right: mascot — hidden on mobile */}
+          <div className="hidden lg:flex w-full shrink-0 items-center justify-center lg:w-auto">
+            <Image
+              src="/mascot.png"
+              alt="Ambagan mascot"
+              width={320}
+              height={320}
+              priority
+              className="select-none drop-shadow-lg"
+            />
           </div>
         </div>
       </div>
