@@ -1,4 +1,5 @@
-import { connection } from 'next/server'
+export const dynamic = 'force-dynamic'
+
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { WalletProvisioner } from "./wallet-provisioner";
@@ -8,7 +9,6 @@ export default async function WalletOnboardingPage({
 }: {
   searchParams: Promise<{ invite?: string }>;
 }) {
-  await connection()
   const { invite } = await searchParams;
   const supabase = await createClient();
   const {

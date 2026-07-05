@@ -1,10 +1,10 @@
-import { connection } from 'next/server'
+export const dynamic = 'force-dynamic'
+
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 import CreateGroupForm from './create-group-form'
 
 export default async function NewGroupPage() {
-  await connection()
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
