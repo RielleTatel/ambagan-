@@ -28,7 +28,7 @@ export function GroupCard({ id, name, description, balance, memberCount }: Group
               <div className="text-xl font-semibold text-heading">{memberCount}</div>
             </div>
           </div>
-          <span className="inline-flex w-fit rounded-full border-2 border-default-strong bg-surface px-3 py-1 text-xs font-medium text-fg-brand-strong">
+          <span className="inline-flex w-fit rounded-full border-2 border-border-default-strong bg-surface px-3 py-1 text-xs font-medium text-fg-brand-strong">
             Cycle not started
           </span>
         </CardContent>

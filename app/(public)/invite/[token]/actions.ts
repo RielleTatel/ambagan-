@@ -16,7 +16,7 @@ export async function acceptInvite(token: string): Promise<AcceptResult> {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('stellar_public_key, stellar_secret_encrypted')
+    .select('stellar_public_key')
     .eq('id', user.id)
     .single()
   if (!profile?.stellar_public_key) {

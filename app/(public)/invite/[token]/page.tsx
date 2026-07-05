@@ -47,7 +47,7 @@ export default async function InvitePage({
           {group.description && <CardDescription>{group.description}</CardDescription>}
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          <div className="rounded-DEFAULT border-2 border-default bg-surface p-4 text-sm">
+          <div className="rounded border-2 border-border-default bg-surface p-4 text-sm">
             <div>Contribution: <strong>{group.contribution_amount} AMBPHP</strong> {group.cadence}</div>
           </div>
           <JoinButton token={token} />

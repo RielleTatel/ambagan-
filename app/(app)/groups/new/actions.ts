@@ -31,7 +31,7 @@ function validate(input: CreateGroupInput): string | null {
   if (!input.name || input.name.length > 80) return 'Group name is required (max 80 chars).'
   if (input.description && input.description.length > 500) return 'Description too long (max 500 chars).'
   if (!(input.contributionAmount > 0) || input.contributionAmount > 1_000_000)
-    return 'Contribution amount must be between 0 and 1,000,000.'
+    return 'Contribution amount must be a positive number (max 1,000,000).'
   if (!['weekly', 'biweekly', 'monthly'].includes(input.cadence)) return 'Invalid cadence.'
   if (!(input.interestRate >= 0 && input.interestRate <= 10))
     return 'Interest rate must be between 0 and 10 percent per month.'
