@@ -2,7 +2,12 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { WalletProvisioner } from "./wallet-provisioner";
 
-export default async function WalletOnboardingPage() {
+export default async function WalletOnboardingPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ invite?: string }>;
+}) {
+  const { invite } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -19,12 +24,12 @@ export default async function WalletOnboardingPage() {
     .single();
 
   if (profile?.stellar_public_key) {
-    redirect("/dashboard");
+    redirect(invite ? `/invite/${invite}` : "/dashboard");
   }
 
   return (
     <main className="flex min-h-svh items-center justify-center p-6">
-      <WalletProvisioner />
+      <WalletProvisioner inviteToken={invite} />
     </main>
   );
 }

@@ -13,7 +13,11 @@ import {
 
 type Status = "provisioning" | "error";
 
-export function WalletProvisioner() {
+interface WalletProvisionerProps {
+  inviteToken?: string;
+}
+
+export function WalletProvisioner({ inviteToken }: WalletProvisionerProps) {
   const router = useRouter();
   const [status, setStatus] = useState<Status>("provisioning");
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +32,8 @@ export function WalletProvisioner() {
         const body = await res.json().catch(() => ({}));
         throw new Error(body.error ?? "Failed to provision Stellar wallet");
       }
-      router.push("/dashboard");
+      const redirectPath = inviteToken ? `/invite/${inviteToken}` : "/dashboard";
+      router.push(redirectPath);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "An error occurred");
       setStatus("error");
