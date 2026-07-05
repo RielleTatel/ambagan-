@@ -6,7 +6,8 @@
     "start": "next start",
     "lint": "eslint .",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:stellar": "node --env-file=.env scripts/test-stellar.mjs"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.1",
