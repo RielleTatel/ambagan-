@@ -1,33 +1,31 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Navbar } from '@/components/landing/Navbar'
+import { HeroSection } from '@/components/landing/HeroSection'
+import { CommunitySection } from '@/components/landing/CommunitySection'
+import { ProblemSection } from '@/components/landing/ProblemSection'
+import { FeaturesSection } from '@/components/landing/FeaturesSection'
+import { HowItWorksSection } from '@/components/landing/HowItWorksSection'
+import { SavingsFlowDiagram } from '@/components/landing/SavingsFlowDiagram'
+import { TrustSection } from '@/components/landing/TrustSection'
+import { FAQSection } from '@/components/landing/FAQSection'
+import { CTASection } from '@/components/landing/CTASection'
+import { Footer } from '@/components/landing/Footer'
 
 export default function LandingPage() {
   return (
-    <main className="min-h-svh bg-warm-bg">
-      <section className="mx-auto flex min-h-svh max-w-[1152px] flex-col items-center justify-center px-6 py-24 text-center">
-        <div className="flex max-w-2xl flex-col items-center gap-6">
-          <span className="rounded-full border-2 border-border-brand-subtle bg-surface px-4 py-1.5 text-[13px] font-bold uppercase tracking-[0.8px] text-fg-brand-strong">
-            Digital Paluwagan on Stellar
-          </span>
-          <h1 className="text-heading">Ambagan!</h1>
-          <p className="max-w-[65ch] text-[17px] leading-[1.55] text-body md:text-[19px] md:leading-[1.6]">
-            A community savings and lending platform built on Stellar. Pool
-            contributions with people you trust, vote democratically on loans,
-            and keep every transaction verifiable on-chain.
-          </p>
-          <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
-            <Button asChild size="lg">
-              <Link href="/register">Get started</Link>
-            </Button>
-            <Button asChild size="lg" variant="secondary">
-              <Link href="/login">Sign in</Link>
-            </Button>
-          </div>
-          <p className="mt-6 text-[14px] leading-[1.5] text-body-subtle">
-            Have an invite? Open the link your group administrator sent you.
-          </p>
-        </div>
-      </section>
-    </main>
-  );
+    <div className="min-h-svh bg-warm-bg">
+      <Navbar />
+      <main>
+        <HeroSection />
+        <CommunitySection />
+        <ProblemSection />
+        <FeaturesSection />
+        <HowItWorksSection />
+        <SavingsFlowDiagram />
+        <TrustSection />
+        <FAQSection />
+        <CTASection />
+      </main>
+      <Footer />
+    </div>
+  )
 }
