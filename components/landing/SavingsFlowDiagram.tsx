@@ -47,13 +47,6 @@ export function SavingsFlowDiagram() {
             <Member name="Member C" amount="₱1,000" />
           </div>
 
-          {/* Converging lines */}
-          <div className="relative mb-0 mt-0 flex justify-center">
-            <div className="absolute top-0 left-1/6 h-full w-0.5 rotate-[30deg] bg-border-default" />
-            <div className="absolute top-0 left-1/2 h-8 w-0.5 -translate-x-1/2 bg-border-default" />
-            <div className="absolute top-0 right-1/6 h-full w-0.5 -rotate-[30deg] bg-border-default" />
-            <div className="h-12" />
-          </div>
 
           {/* Community fund pool */}
           <div className="rounded-xl border-2 border-border-brand-subtle bg-surface p-6 text-center shadow-sm">
