@@ -49,12 +49,12 @@ export function HeroSection() {
           {/* Right: mascot — hidden on mobile */}
           <div className="hidden lg:flex w-full shrink-0 items-center justify-center lg:w-auto">
             <Image
-              src="/mascot.png"
+              src="/assets/mascot.png"
               alt="Ambagan mascot"
               width={320}
               height={320}
               priority
-              className="select-none drop-shadow-lg"
+              className="select-none"
             />
           </div>
         </div>
