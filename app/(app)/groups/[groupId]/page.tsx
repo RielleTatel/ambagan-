@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 import { getAMBPHPBalance } from '@/lib/stellar'
