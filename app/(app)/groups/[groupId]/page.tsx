@@ -5,6 +5,8 @@ import { createClient } from '@/utils/supabase/server'
 import { getAMBPHPBalance } from '@/lib/stellar'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { InviteLink } from '@/components/group/invite-link'
+import { ContributeButton } from '@/components/group/contribute-button'
+import { ContributionStatus } from '@/components/group/contribution-status'
 
 export default async function GroupOverviewPage({
   params,
@@ -18,7 +20,7 @@ export default async function GroupOverviewPage({
 
   const { data: group } = await supabase
     .from('groups')
-    .select('id, name, description, stellar_account_id, invite_token, invite_active, admin_id')
+    .select('id, name, description, stellar_account_id, invite_token, invite_active, admin_id, contribution_amount')
     .eq('id', groupId)
     .single()
 
@@ -62,6 +64,12 @@ export default async function GroupOverviewPage({
           {isAdmin && group.invite_active && group.invite_token && (
             <InviteLink token={group.invite_token} />
           )}
+
+          <ContributeButton
+            groupId={group.id}
+            amount={Number(group.contribution_amount)}
+          />
+          <ContributionStatus groupId={group.id} />
         </CardContent>
       </Card>
     </main>
