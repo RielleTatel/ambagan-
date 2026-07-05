@@ -1,13 +1,12 @@
-import Image from 'next/image'
 import Link from 'next/link'
 
 export function HeroSection() {
   return (
     <section className="bg-neutral-primary py-24">
       <div className="mx-auto max-w-[1152px] px-6">
-        <div className="flex flex-col items-center gap-16 lg:flex-row lg:items-center lg:gap-24">
-          {/* Left: text */}
-          <div className="flex max-w-xl flex-col items-start gap-6">
+        <div className="flex flex-col items-center gap-16">
+          {/* Hero text */}
+          <div className="flex max-w-2xl flex-col items-center gap-6 text-center">
             {/* Badge */}
             <span className="rounded-full border-2 border-border-brand-subtle bg-surface px-4 py-1.5 text-[13px] font-bold uppercase tracking-[0.8px] text-fg-brand-strong">
               🇵🇭 Community-Powered Savings Platform
@@ -46,17 +45,6 @@ export function HeroSection() {
             </p>
           </div>
 
-          {/* Right: mascot — hidden on mobile */}
-          <div className="hidden lg:flex w-full shrink-0 items-center justify-center lg:w-auto">
-            <Image
-              src="/assets/mascot.png"
-              alt="Ambagan mascot"
-              width={320}
-              height={320}
-              priority
-              className="select-none"
-            />
-          </div>
         </div>
       </div>
     </section>
