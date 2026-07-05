@@ -1,5 +1,4 @@
-export const dynamic = 'force-dynamic'
-
+import { connection } from 'next/server'
 import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 import { getAMBPHPBalance } from '@/lib/stellar'
@@ -11,6 +10,7 @@ export default async function GroupOverviewPage({
 }: {
   params: Promise<{ groupId: string }>
 }) {
+  await connection()
   const { groupId } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()

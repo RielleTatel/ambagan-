@@ -1,5 +1,4 @@
-export const dynamic = 'force-dynamic'
-
+import { connection } from 'next/server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
@@ -9,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { GroupCard } from '@/components/group/group-card'
 
 export default async function DashboardPage() {
+  await connection()
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')

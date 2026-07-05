@@ -1,5 +1,4 @@
-export const dynamic = 'force-dynamic'
-
+import { connection } from 'next/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/utils/supabase/server'
@@ -11,6 +10,7 @@ export default async function InvitePage({
 }: {
   params: Promise<{ token: string }>
 }) {
+  await connection()
   const { token } = await params
   const supabase = await createClient()
 
