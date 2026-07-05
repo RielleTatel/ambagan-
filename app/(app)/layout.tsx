@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
+import { UserSidebar } from "@/components/nav/user-sidebar";
 
 export default async function AppLayout({
   children,
@@ -15,5 +16,10 @@ export default async function AppLayout({
     redirect("/login");
   }
 
-  return <div className="min-h-svh bg-warm-bg">{children}</div>;
+  return (
+    <div className="flex min-h-svh bg-warm-bg">
+      <UserSidebar />
+      <div className="flex flex-1 overflow-hidden">{children}</div>
+    </div>
+  );
 }
