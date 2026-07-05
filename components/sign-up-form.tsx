@@ -16,10 +16,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export function SignUpForm({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+type SignUpFormProps = React.ComponentPropsWithoutRef<'div'> & {
+  inviteToken?: string
+}
+
+export function SignUpForm({ className, inviteToken, ...props }: SignUpFormProps) {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,7 +46,9 @@ export function SignUpForm({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/onboarding/wallet`,
+          emailRedirectTo: `${window.location.origin}/onboarding/wallet${
+              inviteToken ? `?invite=${encodeURIComponent(inviteToken)}` : ''
+            }`,
           data: { full_name: fullName },
         },
       });
@@ -65,7 +68,21 @@ export function SignUpForm({
             body.error ?? "Failed to provision Stellar wallet",
           );
         }
-        router.push("/dashboard");
+        if (inviteToken) {
+          const acceptRes = await fetch('/api/invite/accept-after-signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: inviteToken }),
+          })
+          if (acceptRes.ok) {
+            const body = (await acceptRes.json()) as { groupId?: string }
+            router.push(body.groupId ? `/groups/${body.groupId}` : '/dashboard')
+          } else {
+            router.push('/dashboard')
+          }
+        } else {
+          router.push('/dashboard')
+        }
       } else {
         router.push("/auth/sign-up-success");
       }
