@@ -2,17 +2,28 @@ import * as StellarSdk from '@stellar/stellar-sdk'
 import CryptoJS from 'crypto-js'
 
 // ─── Config ───────────────────────────────────────────────
-const HORIZON_URL = process.env.STELLAR_HORIZON_URL!
 const NETWORK_PASSPHRASE = StellarSdk.Networks.TESTNET
-const ENCRYPTION_SECRET = process.env.STELLAR_ENCRYPTION_SECRET!
 
-export const horizonServer = new StellarSdk.Horizon.Server(HORIZON_URL)
+// Lazy getters so missing env vars don't crash the module at import time —
+// they only throw when an actual Stellar operation is attempted.
+function getHorizonServer() {
+  return new StellarSdk.Horizon.Server(process.env.STELLAR_HORIZON_URL!)
+}
+function getEncryptionSecret() {
+  return process.env.STELLAR_ENCRYPTION_SECRET!
+}
 
-// The asset your app uses as its currency
-export const AMBPHP = new StellarSdk.Asset(
-  'AMBPHP',
-  process.env.STELLAR_ISSUER_PUBLIC_KEY!
-)
+export const horizonServer = {
+  loadAccount: (pk: string) => getHorizonServer().loadAccount(pk),
+  submitTransaction: (tx: StellarSdk.Transaction) => getHorizonServer().submitTransaction(tx),
+  transactions: () => getHorizonServer().transactions(),
+  payments: () => getHorizonServer().payments(),
+}
+
+// The asset your app uses as its currency (lazy — requires STELLAR_ISSUER_PUBLIC_KEY at runtime)
+export function getAMBPHP() {
+  return new StellarSdk.Asset('AMBPHP', process.env.STELLAR_ISSUER_PUBLIC_KEY!)
+}
 
 // ─── Keypair helpers ──────────────────────────────────────
 
@@ -25,11 +36,11 @@ export function generateKeypair() {
 }
 
 export function encryptSecret(secret: string): string {
-  return CryptoJS.AES.encrypt(secret, ENCRYPTION_SECRET).toString()
+  return CryptoJS.AES.encrypt(secret, getEncryptionSecret()).toString()
 }
 
 export function decryptSecret(encrypted: string): string {
-  const bytes = CryptoJS.AES.decrypt(encrypted, ENCRYPTION_SECRET)
+  const bytes = CryptoJS.AES.decrypt(encrypted, getEncryptionSecret())
   return bytes.toString(CryptoJS.enc.Utf8)
 }
 
@@ -72,7 +83,7 @@ export async function establishTrustline(accountSecret: string) {
   })
     .addOperation(
       StellarSdk.Operation.changeTrust({
-        asset: AMBPHP,
+        asset: getAMBPHP(),
       })
     )
     .setTimeout(30)
@@ -101,7 +112,7 @@ export async function sendAMBPHP(
     .addOperation(
       StellarSdk.Operation.payment({
         destination: toPublicKey,
-        asset: AMBPHP,
+        asset: getAMBPHP(),
         amount: amount,
       })
     )
@@ -129,7 +140,7 @@ export async function mintAMBPHP(toPublicKey: string, amount: string) {
     .addOperation(
       StellarSdk.Operation.payment({
         destination: toPublicKey,
-        asset: AMBPHP,
+        asset: getAMBPHP(),
         amount: amount,
       })
     )
