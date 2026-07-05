@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { Menu, X } from 'lucide-react'
 
@@ -12,6 +13,7 @@ export function Navbar() {
       <div className="mx-auto flex max-w-[1152px] items-center justify-between px-6 py-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
+          <Image src="/mascot.png" alt="Ambagan logo" width={32} height={32} className="rounded-lg" />
           <span className="text-xl font-bold text-heading tracking-tight">Ambagan!</span>
         </Link>
 
