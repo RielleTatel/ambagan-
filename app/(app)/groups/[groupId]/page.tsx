@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { InviteLink } from '@/components/group/invite-link'
 import { ContributeButton } from '@/components/group/contribute-button'
 import { ContributionStatus } from '@/components/group/contribution-status'
+import { InterestSummary } from '@/components/group/interest-summary'
 
 export default async function GroupOverviewPage({
   params,
@@ -70,6 +71,7 @@ export default async function GroupOverviewPage({
             amount={Number(group.contribution_amount)}
           />
           <ContributionStatus groupId={group.id} />
+          <InterestSummary groupId={group.id} userId={user.id} />
         </CardContent>
       </Card>
     </main>
