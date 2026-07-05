@@ -1,6 +1,8 @@
 'use client'
 
-import { CheckCircle2, Clock, ExternalLink } from 'lucide-react'
+import { useState, useTransition } from 'react'
+import { CheckCircle2, Clock, ExternalLink, Loader2 } from 'lucide-react'
+import { submitRepayment } from './actions'
 
 export type RepaymentRowData = {
   id: string
@@ -31,6 +33,21 @@ export function RepaymentRow({
   groupId: string
   isNextPending: boolean
 }) {
+  const [pending, startTransition] = useTransition()
+  const [error, setError] = useState<string | null>(null)
+
+  function onPay() {
+    setError(null)
+    startTransition(async () => {
+      const result = await submitRepayment({
+        groupId,
+        loanId: row.loanId,
+        repaymentId: row.id,
+      })
+      if (!result.ok) setError(result.error)
+    })
+  }
+
   return (
     <li className="flex flex-col gap-2 px-5 py-4">
       <div className="flex items-center justify-between gap-4">
@@ -74,16 +91,19 @@ export function RepaymentRow({
           {isNextPending && (
             <button
               type="button"
-              disabled
-              className="inline-flex items-center gap-1.5 rounded-xl border-2 border-transparent bg-disabled px-4 py-2 text-xs font-bold uppercase tracking-wide text-fg-disabled"
+              onClick={onPay}
+              disabled={pending}
+              className="inline-flex items-center gap-1.5 rounded-xl border-2 border-transparent bg-brand px-4 py-2 text-xs font-bold uppercase tracking-wide text-white transition-all [box-shadow:0_3px_0_var(--shadow-brand)] hover:bg-brand-medium active:translate-y-0.5 active:[box-shadow:0_1px_0_var(--shadow-brand)] disabled:cursor-not-allowed disabled:bg-disabled disabled:text-fg-disabled disabled:shadow-none"
             >
-              Make Payment
+              {pending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+              {pending ? 'Paying…' : 'Make Payment'}
             </button>
           )}
         </div>
       </div>
-      {/* void groupId until Task 5 wires the action */}
-      <span hidden data-group={groupId} />
+      {error && (
+        <p className="text-xs font-medium text-danger-strong">{error}</p>
+      )}
     </li>
   )
 }
