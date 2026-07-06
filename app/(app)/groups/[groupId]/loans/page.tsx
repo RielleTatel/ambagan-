@@ -17,7 +17,7 @@ export default async function LoansPage({
 
   const { data: loans } = await supabase
     .from('loans')
-    .select('id, amount, purpose_tag, description, status, borrower_id, voting_closes_at, created_at, profiles:borrower_id(full_name)')
+    .select('id, amount, purpose_tag, description, status, borrower_id, voting_closes_at, created_at, profiles:borrower_id(full_name, credit_score)')
     .eq('group_id', groupId)
     .order('created_at', { ascending: false })
 

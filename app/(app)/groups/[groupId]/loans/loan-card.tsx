@@ -4,6 +4,7 @@ import { useEffect, useState, useTransition } from 'react'
 import { Loader2, ThumbsDown, ThumbsUp } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 import { voteOnLoan } from './actions'
+import { creditLetterGrade } from '@/lib/credit'
 
 type LoanRow = {
   id: string
@@ -12,7 +13,7 @@ type LoanRow = {
   description: string | null
   status: string
   borrower_id: string
-  profiles?: { full_name: string } | null
+  profiles?: { full_name: string; credit_score: number | null } | null
 }
 
 const PURPOSE_COLORS: Record<string, string> = {
@@ -119,6 +120,19 @@ export function LoanCard({
           <p className="text-xs text-body-subtle">
             by {loan.profiles?.full_name ?? loan.borrower_id}
           </p>
+          {loan.profiles?.credit_score != null && (
+            <span
+              className={`ml-2 inline-flex items-center rounded-full border-2 px-2 py-0.5 text-[11px] font-bold ${
+                creditLetterGrade(loan.profiles.credit_score) === 'A' || creditLetterGrade(loan.profiles.credit_score) === 'B'
+                  ? 'border-border-brand-subtle bg-surface text-fg-brand-strong'
+                  : creditLetterGrade(loan.profiles.credit_score) === 'C'
+                  ? 'border-border-warning-subtle bg-warning-soft text-fg-warning'
+                  : 'border-border-danger-subtle bg-danger-soft text-danger-strong'
+              }`}
+            >
+              Credit {creditLetterGrade(loan.profiles.credit_score)}
+            </span>
+          )}
           {loan.description && (
             <p className="mt-2 text-sm text-body">{loan.description}</p>
           )}
