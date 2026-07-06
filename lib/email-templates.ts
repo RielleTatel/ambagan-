@@ -1,5 +1,9 @@
 import type { EmailTemplate } from './email'
 
+function safeUrl(v: string): string {
+  return v.startsWith('https://') || v.startsWith('http://') ? escape(v) : '#'
+}
+
 export function renderTemplate(
   template: EmailTemplate,
   data: Record<string, unknown>,
@@ -13,7 +17,7 @@ export function renderTemplate(
           <p>Your contribution of <strong>${escape(String(data.amount ?? ''))} AMBPHP</strong> to
           <strong>${escape(String(data.groupName ?? ''))}</strong> is due on
           ${escape(String(data.dueDate ?? ''))}.</p>
-          <p><a href="${escape(String(data.groupUrl ?? '#'))}">Open your group</a> to pay now.</p>
+          <p><a href="${safeUrl(String(data.groupUrl ?? '#'))}">Open your group</a> to pay now.</p>
         `),
       }
     case 'repayment_reminder':
@@ -24,7 +28,7 @@ export function renderTemplate(
           <p>Installment ${escape(String(data.installmentNumber ?? ''))} of your loan
           (${escape(String(data.amount ?? ''))} AMBPHP) is due on
           ${escape(String(data.dueDate ?? ''))}.</p>
-          <p><a href="${escape(String(data.repayUrl ?? '#'))}">Make payment</a>.</p>
+          <p><a href="${safeUrl(String(data.repayUrl ?? '#'))}">Make payment</a>.</p>
         `),
       }
     case 'vote_opened':
@@ -32,25 +36,25 @@ export function renderTemplate(
         subject: `Vote requested: loan in ${data.groupName ?? 'your group'}`,
         html: layout(`
           <p>A new loan request needs your vote.</p>
-          <p><a href="${escape(String(data.loansUrl ?? '#'))}">Review the request</a>.</p>
+          <p><a href="${safeUrl(String(data.loansUrl ?? '#'))}">Review the request</a>.</p>
         `),
       }
     case 'loan_decision':
       return {
-        subject: `Loan ${escape(String(data.outcome ?? ''))} — ${data.groupName ?? 'Ambagan'}`,
+        subject: `Loan ${String(data.outcome ?? '')} — ${data.groupName ?? 'Ambagan'}`,
         html: layout(`
           <p>Your loan request has been ${escape(String(data.outcome ?? ''))}.</p>
-          <p><a href="${escape(String(data.loanUrl ?? '#'))}">View details</a>.</p>
+          <p><a href="${safeUrl(String(data.loanUrl ?? '#'))}">View details</a>.</p>
         `),
       }
     case 'default_escalation':
       return {
-        subject: `Loan entered stage ${escape(String(data.stage ?? ''))}`,
+        subject: `Loan entered stage ${String(data.stage ?? '')}`,
         html: layout(`
           <p>A loan in <strong>${escape(String(data.groupName ?? ''))}</strong> has moved to
           <strong>stage ${escape(String(data.stage ?? ''))}</strong>
           (${escape(String(data.daysPastDue ?? ''))} days past due).</p>
-          <p><a href="${escape(String(data.groupUrl ?? '#'))}">Open your group</a> for details.</p>
+          <p><a href="${safeUrl(String(data.groupUrl ?? '#'))}">Open your group</a> for details.</p>
         `),
       }
   }
