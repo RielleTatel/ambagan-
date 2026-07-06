@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { createClient } from '@/utils/supabase/server'
 import { decryptSecret, sendAMBPHP } from '@/lib/stellar'
 import { computeInterestShares } from '@/lib/interest-distribution'
+import { recomputeCreditScore } from '@/lib/credit-inputs'
 
 export async function submitRepayment(input: {
   groupId: string
@@ -124,5 +125,6 @@ export async function submitRepayment(input: {
   revalidatePath(`/groups/${input.groupId}/repayments`)
   revalidatePath(`/groups/${input.groupId}/ledger`)
   revalidatePath(`/groups/${input.groupId}`)
+  await recomputeCreditScore(user.id).catch(() => undefined)
   return { ok: true, txHash, loanRepaid }
 }

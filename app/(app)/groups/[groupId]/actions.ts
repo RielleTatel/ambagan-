@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { createClient } from '@/utils/supabase/server'
 import { decryptSecret, sendAMBPHP } from '@/lib/stellar'
 import { computeCurrentCycle, computeCycleDueDate, type Cadence } from '@/lib/cycles'
+import { recomputeCreditScore } from '@/lib/credit-inputs'
 
 export async function submitContribution(
   groupId: string,
@@ -87,5 +88,6 @@ export async function submitContribution(
     .eq('id', membership.id)
 
   revalidatePath(`/groups/${groupId}`)
+  await recomputeCreditScore(user.id).catch(() => undefined)
   return { ok: true, txHash }
 }
