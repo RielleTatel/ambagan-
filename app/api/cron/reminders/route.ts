@@ -26,6 +26,7 @@ export async function GET(request: NextRequest) {
   )
 
   const today = new Date()
+  today.setUTCHours(0, 0, 0, 0)
 
   const inRange = (dueIso: string) => {
     const due = new Date(dueIso)
@@ -89,7 +90,7 @@ export async function GET(request: NextRequest) {
   const { data: repays } = await supabase
     .from('repayments')
     .select(
-      'id, loan_id, installment_number, amount_due, due_date, status, loans:loan_id(borrower_id, group_id, groups(name))',
+      'id, loan_id, installment_number, amount_due, due_date, status, loans:loan_id(borrower_id, group_id, groups(name), borrowers:borrower_id(profiles(full_name)))',
     )
     .eq('status', 'pending')
 
@@ -106,7 +107,7 @@ export async function GET(request: NextRequest) {
     if (!email) continue
 
     const result = await sendEmail(email, 'repayment_reminder', {
-      fullName: authUser.user?.user_metadata?.full_name,
+      fullName: (r as any).loans?.borrowers?.profiles?.full_name,
       installmentNumber: r.installment_number,
       amount: r.amount_due,
       groupName,
@@ -133,7 +134,8 @@ export async function GET(request: NextRequest) {
 
   // ── Persist in-app notifications ────────────────────────────────────────────
   if (notifRows.length > 0) {
-    await supabase.from('notifications').insert(notifRows)
+    const { error: notifError } = await supabase.from('notifications').insert(notifRows)
+    if (notifError) console.error('[reminders] notifications insert failed:', notifError.message)
   }
 
   return Response.json({
