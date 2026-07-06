@@ -88,6 +88,7 @@ export function DefaultRow({
             disabled={pending}
             className="inline-flex items-center gap-1.5 rounded-xl border-2 border-border-default bg-neutral-primary px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-body [box-shadow:0_3px_0_var(--shadow-secondary)] active:translate-y-0.5 disabled:opacity-60"
           >
+            {pending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
             Partial Settle
           </button>
           <button
@@ -96,6 +97,7 @@ export function DefaultRow({
             disabled={pending}
             className="inline-flex items-center gap-1.5 rounded-xl border-2 border-border-default bg-neutral-primary px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-body [box-shadow:0_3px_0_var(--shadow-secondary)] active:translate-y-0.5 disabled:opacity-60"
           >
+            {pending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
             Dispute
           </button>
         </div>
