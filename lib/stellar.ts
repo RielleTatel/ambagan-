@@ -299,3 +299,35 @@ export async function disburseLoan(
   const result = await horizonServer.submitTransaction(tx)
   return { hash: result.hash }
 }
+
+// Distribute the group's AMBPHP pot to a list of recipients in a single tx.
+// Group master key signs alone (threshold = 1 from setupGroupMultisig).
+// Stellar limits ops per tx to 100; assumes groups have < 100 members.
+export async function distributePot(
+  groupSecret: string,
+  payouts: { destination: string; amount: string }[],
+): Promise<{ hash: string }> {
+  if (payouts.length === 0) throw new Error('No payouts to distribute')
+  if (payouts.length > 100) throw new Error('Too many payouts for a single tx (max 100)')
+
+  const groupKp = StellarSdk.Keypair.fromSecret(groupSecret)
+  const account = await horizonServer.loadAccount(groupKp.publicKey())
+
+  const builder = new StellarSdk.TransactionBuilder(account, {
+    fee: StellarSdk.BASE_FEE,
+    networkPassphrase: NETWORK_PASSPHRASE,
+  })
+  for (const p of payouts) {
+    builder.addOperation(
+      StellarSdk.Operation.payment({
+        destination: p.destination,
+        asset: getAMBPHP(),
+        amount: p.amount,
+      }),
+    )
+  }
+  const tx = builder.setTimeout(60).build()
+  tx.sign(groupKp)
+  const result = await horizonServer.submitTransaction(tx)
+  return { hash: result.hash }
+}
