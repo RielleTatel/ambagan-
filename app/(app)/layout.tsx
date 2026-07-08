@@ -14,7 +14,7 @@ async function AuthGate({ children }: { children: React.ReactNode }) {
 
 function UserSidebarSkeleton() {
   return (
-    <aside className="h-screen w-16 shrink-0 border-r-2 border-border-default bg-neutral-primary" />
+    <aside className="h-full w-16 shrink-0 border-r-2 border-border-default bg-neutral-primary" />
   );
 }
 
@@ -24,13 +24,13 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-svh bg-warm-bg">
+    <div className="flex h-svh overflow-hidden bg-warm-bg">
       <Suspense fallback={<UserSidebarSkeleton />}>
         <UserSidebar />
       </Suspense>
       <Suspense fallback={null}>
         <AuthGate>
-          <div className="flex flex-1 overflow-hidden">{children}</div>
+          <div className="flex flex-1 overflow-y-auto">{children}</div>
         </AuthGate>
       </Suspense>
     </div>

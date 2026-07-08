@@ -23,7 +23,7 @@ export async function UserSidebar() {
     .filter((g): g is NonNullable<typeof g> => g != null);
 
   return (
-    <aside className="flex h-screen w-16 flex-col items-center border-r-2 border-border-default bg-neutral-primary py-4">
+    <aside className="flex h-full w-16 flex-col items-center border-r-2 border-border-default bg-neutral-primary py-4">
       <div className="flex flex-col items-center gap-2">
         <IconNavItem href="/dashboard" label="Home" icon={<Home />} exact />
       </div>

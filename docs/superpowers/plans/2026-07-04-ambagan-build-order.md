@@ -108,4 +108,5 @@ Recording these so future decisions have context.
 
 ## What's Deliberately Not In This Build Order
 
-Ledger export (PDF/CSV), notifications (Resend emails), credit scoring UI polish, streak badges, `/onboarding/wallet` Freighter opt-in, admin panel. These are Phase 7+ polish — add once the six phases above run end-to-end. They don't block the demo path.
+Ledger export (PDF/CSV), notifications (Resend emails), credit scoring UI polish
+, streak badges, `/onboarding/wallet` Freighter opt-in, admin panel. These are Phase 7+ polish — add once the six phases above run end-to-end. They don't block the demo path.
