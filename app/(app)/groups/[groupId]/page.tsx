@@ -8,6 +8,7 @@ import { InviteLink } from '@/components/group/invite-link'
 import { ContributeButton } from '@/components/group/contribute-button'
 import { ContributionStatus } from '@/components/group/contribution-status'
 import { InvestButton } from '@/components/group/invest-button'
+import { OwnershipSummary } from '@/components/group/ownership-summary'
 
 export default async function GroupOverviewPage({
   params,
@@ -72,6 +73,7 @@ export default async function GroupOverviewPage({
           />
           <ContributionStatus groupId={group.id} />
           <InvestButton groupId={group.id} />
+          <OwnershipSummary groupId={group.id} userId={user.id} />
         </CardContent>
       </Card>
     </main>
