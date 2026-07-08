@@ -7,8 +7,7 @@
 ---
 
 ## What Ambagan Is
-
-A rotating savings and loan group (paluwagan / ROSCA) app. Members pool a fixed contribution each cycle. One member wins the pot per cycle, and members can take loans against the group's balance. Everything is enforced by a shared Stellar multisig account — no single person can move funds unilaterally.
+Ambagan is a community-powered savings and lending platform that digitizes the traditional Filipino paluwagan. It enables trusted groups—such as families, friends, cooperatives, student organizations, and workplaces—to contribute to a shared savings fund, collectively approve loan requests, and transparently track every contribution, repayment, and transaction. By combining collaborative financial management with modern digital tools, Ambagan promotes accountability, trust, and shared financial growth within every community.
 
 ---
 

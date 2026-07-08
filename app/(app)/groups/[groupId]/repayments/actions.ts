@@ -3,7 +3,6 @@
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/utils/supabase/server'
 import { decryptSecret, sendAMBPHP } from '@/lib/stellar'
-import { computeInterestShares } from '@/lib/interest-distribution'
 import { recomputeCreditScore } from '@/lib/credit-inputs'
 
 export async function submitRepayment(input: {
@@ -30,7 +29,7 @@ export async function submitRepayment(input: {
 
   const { data: repayment } = await supabase
     .from('repayments')
-    .select('id, loan_id, amount_due, interest, status, installment_number')
+    .select('id, loan_id, amount_due, status, installment_number')
     .eq('id', input.repaymentId)
     .single()
   if (!repayment) return { ok: false, error: 'Installment not found' }
@@ -74,41 +73,6 @@ export async function submitRepayment(input: {
     .eq('id', input.repaymentId)
     .eq('status', 'pending')
   if (updErr) return { ok: false, error: `Failed to record payment: ${updErr.message}` }
-
-  const { data: members } = await supabase
-    .from('group_members')
-    .select('user_id')
-    .eq('group_id', input.groupId)
-  const nonBorrowerIds = (members ?? [])
-    .map((m) => m.user_id)
-    .filter((id): id is string => Boolean(id) && id !== user.id)
-
-  const shares = computeInterestShares(Number(repayment.interest), nonBorrowerIds)
-  if (shares.length > 0) {
-    await supabase.from('interest_distributions').insert(
-      shares.map((s) => ({
-        loan_id: input.loanId,
-        member_id: s.memberId,
-        amount: s.amount,
-      })),
-    )
-    for (const s of shares) {
-      const { data: gm } = await supabase
-        .from('group_members')
-        .select('id, total_interest_earned')
-        .eq('group_id', input.groupId)
-        .eq('user_id', s.memberId)
-        .single()
-      if (gm) {
-        await supabase
-          .from('group_members')
-          .update({
-            total_interest_earned: Number(gm.total_interest_earned ?? 0) + s.amount,
-          })
-          .eq('id', gm.id)
-      }
-    }
-  }
 
   const { count: pendingLeft } = await supabase
     .from('repayments')
