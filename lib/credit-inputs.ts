@@ -8,6 +8,7 @@ export async function buildCreditInputs(userId: string): Promise<CreditInputs> {
     .from('contributions')
     .select('status')
     .eq('user_id', userId)
+    .eq('contribution_type', 'required')
 
   let onTimeContributions = 0
   let lateContributions = 0
