@@ -28,6 +28,7 @@ export function SignUpForm({ className, inviteToken, ...props }: SignUpFormProps
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? window.location.origin;
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,13 +43,16 @@ export function SignUpForm({ className, inviteToken, ...props }: SignUpFormProps
     }
 
     try {
+      const emailRedirectTo = new URL("/onboarding/wallet", appUrl);
+      if (inviteToken) {
+        emailRedirectTo.searchParams.set("invite", inviteToken);
+      }
+
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/onboarding/wallet${
-              inviteToken ? `?invite=${encodeURIComponent(inviteToken)}` : ''
-            }`,
+          emailRedirectTo: emailRedirectTo.toString(),
           data: { full_name: fullName },
         },
       });
