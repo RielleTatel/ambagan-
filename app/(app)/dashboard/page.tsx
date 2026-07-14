@@ -7,6 +7,7 @@ import { getAMBPHPBalance } from '@/lib/stellar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { GroupCard } from '@/components/group/group-card'
+import { JoinWithInvite } from '@/components/group/join-with-invite'
 
 function getGreeting() {
   const hour = new Date().getHours()
@@ -290,19 +291,17 @@ export default async function DashboardPage() {
 
       {/* Your Communities */}
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between gap-4">
           <CardTitle>Your Communities</CardTitle>
+          <Link href="/groups/new">
+            <Button size="sm">Create group</Button>
+          </Link>
         </CardHeader>
-        <CardContent className="pt-0">
+        <CardContent className="pt-0 flex flex-col gap-6">
           {enriched.length === 0 ? (
-            <div className="flex flex-col gap-4">
-              <CardDescription>
-                Start a paluwagan of your own, or paste an invite link from someone to join theirs.
-              </CardDescription>
-              <Link href="/groups/new">
-                <Button>Create your first group</Button>
-              </Link>
-            </div>
+            <CardDescription>
+              Create a group or paste an invite link from someone to join theirs.
+            </CardDescription>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {enriched.map((g) => (
@@ -310,6 +309,12 @@ export default async function DashboardPage() {
               ))}
             </div>
           )}
+          <div className="flex flex-col gap-1.5">
+            <p className="text-xs font-bold uppercase tracking-widest text-body-subtle">
+              Join with invite link
+            </p>
+            <JoinWithInvite compact />
+          </div>
         </CardContent>
       </Card>
 

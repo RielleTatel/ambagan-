@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/utils/supabase/server'
+import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { computeRepaymentSchedule } from '@/lib/loan-math'
 import { computeThreshold, type VoteThreshold } from '@/lib/group-threshold'
 import { decryptSecret, disburseLoan } from '@/lib/stellar'
@@ -63,7 +64,11 @@ export async function requestLoan(input: {
   const now = Date.now()
   const monthMs = 30 * 24 * 60 * 60 * 1000
 
-  const { error: repayErr } = await supabase.from('repayments').insert(
+  const adminClient = createAdminClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  )
+  const { error: repayErr } = await adminClient.from('repayments').insert(
     schedule.map((s) => ({
       loan_id: loan.id,
       installment_number: s.installmentNumber,

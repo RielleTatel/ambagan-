@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { JoinWithInvite } from '@/components/group/join-with-invite'
 
 export function HeroSection() {
   return (
@@ -40,9 +41,10 @@ export function HeroSection() {
               </Link>
             </div>
 
-            <p className="text-sm text-body-subtle">
-              Have an invite? Open the link your group admin sent you.
-            </p>
+            <div className="flex w-full flex-col items-center gap-2">
+              <p className="text-sm text-body-subtle">Already have an invite link?</p>
+              <JoinWithInvite />
+            </div>
           </div>
 
         </div>
