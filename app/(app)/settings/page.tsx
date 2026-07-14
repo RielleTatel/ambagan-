@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 import { FullNameForm } from './full-name-form'
 import { PasswordForm } from './password-form'
+import { LogoutButton } from '@/components/logout-button'
 
 export default async function SettingsPage() {
   const supabase = await createClient()
@@ -70,6 +71,12 @@ export default async function SettingsPage() {
         <p className="mt-4 text-xs text-body-subtle">
           Switching to Freighter is not enabled in this build.
         </p>
+      </section>
+
+      <section className="rounded-xl border-2 border-border-danger bg-neutral-primary p-6 shadow-xs">
+        <h2 className="mb-1 text-lg font-bold text-heading">Sign out</h2>
+        <p className="mb-4 text-sm text-body-subtle">You will be returned to the login page.</p>
+        <LogoutButton />
       </section>
     </main>
   )
