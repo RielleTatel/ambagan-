@@ -25,7 +25,7 @@ export async function GroupSidebar({ groupId }: GroupSidebarProps) {
   const initial = group.name.charAt(0).toUpperCase();
 
   return (
-    <aside className="flex h-screen w-64 flex-col border-r-2 border-border-default bg-neutral-primary px-3 py-4">
+    <aside className="sticky top-0 flex h-svh w-64 shrink-0 flex-col overflow-y-auto border-r-2 border-border-default bg-neutral-primary px-3 py-4">
       <div className="mb-6 flex items-start gap-3 rounded-[12px] border-2 border-border-default bg-warm-bg p-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-softer text-sm font-bold text-fg-brand">
           {initial}

@@ -112,15 +112,25 @@ export default async function AdminPage({
         ) : (
           <ul className="divide-y-2 divide-border-default">
             {members.map((m) => {
-              const name =
-                (m as any).profiles?.full_name ?? 'Member'
+              const raw = (m as any).profiles?.full_name
+              const isUuid = typeof raw === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(raw)
+              const isCurrentUser = m.user_id === user.id
+              const isGroupAdmin = m.user_id === group.admin_id
+              const name = raw && !isUuid ? raw : (isCurrentUser ? 'You' : 'Member')
               return (
                 <li
                   key={m.user_id as string}
                   className="flex items-center justify-between py-3 text-sm"
                 >
                   <div>
-                    <p className="font-semibold text-heading">{name}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-semibold text-heading">{name}</p>
+                      {isGroupAdmin && (
+                        <span className="rounded-full bg-accent-softer px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-fg-accent">
+                          Admin
+                        </span>
+                      )}
+                    </div>
                     <p className="text-xs text-body-subtle">
                       Joined{' '}
                       {new Date(m.joined_at as string).toLocaleDateString()}
