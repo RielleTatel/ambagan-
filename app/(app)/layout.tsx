@@ -30,7 +30,7 @@ export default function AppLayout({
       </Suspense>
       <Suspense fallback={null}>
         <AuthGate>
-          <div className="flex flex-1 overflow-y-auto">{children}</div>
+          <div className="flex-1 overflow-y-auto">{children}</div>
         </AuthGate>
       </Suspense>
     </div>

@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button'
 
 export function InviteLink({ token }: { token: string }) {
   const [copied, setCopied] = useState(false)
-  const url = typeof window === 'undefined' ? '' : `${window.location.origin}/invite/${token}`
+  const base = process.env.NEXT_PUBLIC_APP_URL ?? (typeof window !== 'undefined' ? window.location.origin : '')
+  const url = `${base}/invite/${token}`
 
   async function copy() {
     await navigator.clipboard.writeText(url)
