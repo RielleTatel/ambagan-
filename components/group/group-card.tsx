@@ -11,8 +11,8 @@ export type GroupCardProps = {
 
 export function GroupCard({ id, name, description, balance, memberCount }: GroupCardProps) {
   return (
-    <Link href={`/groups/${id}`} className="block">
-      <Card className="h-full transition hover:shadow-md">
+    <Link href={`/groups/${id}`} className="block ">
+      <Card className="h-full transition hover:shadow-md ">
         <CardHeader>
           <CardTitle className="text-lg">{name}</CardTitle>
           {description && <CardDescription className="line-clamp-2">{description}</CardDescription>}

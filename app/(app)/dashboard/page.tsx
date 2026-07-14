@@ -43,7 +43,7 @@ export default async function DashboardPage() {
   )
 
   return (
-    <main className="mx-auto w-full max-w-5xl p-6 md:p-10">
+    <main className="mx-auto w-full max-w-screen-1xl p-6 md:p-10">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold text-heading">Your groups</h1>
         <Link href="/groups/new">

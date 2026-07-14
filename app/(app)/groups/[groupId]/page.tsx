@@ -46,7 +46,7 @@ export default async function GroupOverviewPage({
   const isAdmin = group.admin_id === user.id
 
   return (
-    <main className="mx-auto w-full max-w-3xl p-6 md:p-10">
+    <main className="mx-auto w-full max-w-5xl p-6 md:p-10 flex flex-col gap-6">
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">{group.name}</CardTitle>
@@ -63,11 +63,14 @@ export default async function GroupOverviewPage({
               <div className="text-2xl font-semibold text-heading">{memberCount ?? 0}</div>
             </div>
           </div>
-
           {isAdmin && group.invite_active && group.invite_token && (
             <InviteLink token={group.invite_token} />
           )}
+        </CardContent>
+      </Card>
 
+      <Card>
+        <CardContent className="flex flex-col gap-6 pt-6">
           <ContributeButton
             groupId={group.id}
             amount={Number(group.contribution_amount)}
