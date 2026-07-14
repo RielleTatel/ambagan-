@@ -1,109 +1,327 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
-  <h1 align="center">Next.js and Supabase Starter Kit</h1>
-</a>
+# Ambagan
 
-<p align="center">
- The fastest way to build apps with Next.js and Supabase
-</p>
+A community savings and lending platform that modernizes the traditional Filipino *paluwagan* — a rotating savings circle where members pool money, take turns receiving the pot, and support each other through democratically approved loans. Ambagan puts this on-chain using the Stellar network for transparent, programmable fund management.
 
-<p align="center">
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
-  <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
-  <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
-</p>
-<br/>
+Built for the Stellar Hackathon.
 
-## Features
+**Live:** [ambagan.site](https://ambagan.site)
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Proxy
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Password-based authentication block installed via the [Supabase UI Library](https://supabase.com/ui/docs/nextjs/password-based-auth)
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Components with [shadcn/ui](https://ui.shadcn.com/)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+---
 
-## Demo
+## What It Does
 
-You can view a fully working demo at [demo-nextjs-with-supabase.vercel.app](https://demo-nextjs-with-supabase.vercel.app/).
+Members form groups, contribute regularly to a shared fund, and vote to approve loan requests from within the community. Every peso deposited and every loan disbursed is recorded as an on-chain Stellar transaction using a custom asset (AMBPHP). Groups end cycles by distributing the accumulated fund back to members in proportion to what they contributed.
 
-## Deploy to Vercel
+Core capabilities:
 
-Vercel deployment will guide you through creating a Supabase account and project.
+- **Groups** — create a savings circle with configurable contribution amount, cadence (weekly/biweekly/monthly), interest rate, and vote threshold
+- **Contributions** — members send AMBPHP to the group's Stellar account on schedule; the app tracks on-time, late, and missed payments
+- **Loans** — any member can request a loan up to half the group's current balance; other members vote to approve or deny within a 48-hour window
+- **Disbursement** — once a loan clears the vote threshold, AMBPHP is sent on-chain to the borrower in the same server action that records the final vote
+- **Repayments** — a flat amortization schedule is generated at request time; each installment is tracked independently
+- **Distributions** — at cycle end, the admin triggers a payout that splits the pot proportionally across all members in a single Stellar transaction
+- **Credit scores** — each member has a 0–1000 score (letter grade A–F) derived from contribution history and loan repayment behavior
+- **Notifications** — in-app feed for votes, contributions, disbursements, and reminders
+- **Invite links** — admins share a UUID token link; unauthenticated visitors are redirected to sign in first, then land on the join page after auth
 
-After installation of the Supabase integration, all relevant environment variables will be assigned to the project so the deployment is fully functioning.
+---
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This+starter+configures+Supabase+Auth+to+use+cookies%2C+making+the+user%27s+session+available+throughout+the+entire+Next.js+app+-+Client+Components%2C+Server+Components%2C+Route+Handlers%2C+Server+Actions+and+Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png)
+## Tech Stack
 
-The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
+| Layer | Choice |
+|---|---|
+| Framework | Next.js 15 (App Router, Server Actions) |
+| Database & Auth | Supabase (Postgres + RLS + Realtime) |
+| Blockchain | Stellar Testnet — custom AMBPHP asset |
+| Styling | Tailwind CSS + custom design system (Forest & Gold) |
+| Email | Resend |
+| Testing | Vitest |
+| Deployment | Vercel |
 
-If you wish to just develop locally and not deploy to Vercel, [follow the steps below](#clone-and-run-locally).
+---
 
-## Clone and run locally
+## Architecture
 
-1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
+### Route Groups
 
-2. Create a Next.js app using the Supabase Starter template npx command
+```
+app/
+├── (public)/           # Landing page, login, register, invite accept, auth callbacks
+└── (app)/              # Authenticated shell — sidebar nav, dashboard, groups
+    ├── dashboard/      # Overview: stats, alerts, communities, activity feed
+    ├── groups/
+    │   ├── new/        # Group creation form
+    │   └── [groupId]/
+    │       ├── page.tsx        # Group home: balance, members, contribute
+    │       ├── loans/          # Loan list + voting cards
+    │       ├── repayments/     # Repayment schedule per member
+    │       ├── ledger/         # On-chain payment history
+    │       └── admin/          # Settings, member management, cycle end, defaults
+    ├── settings/       # Account, password, sign-out
+    ├── notifications/  # Full notification list
+    └── onboarding/wallet/  # Stellar wallet provisioning on first login
+```
 
-   ```bash
-   npx create-next-app --example with-supabase with-supabase-app
-   ```
+### Data Access Pattern
 
-   ```bash
-   yarn create next-app --example with-supabase with-supabase-app
-   ```
+All pages are server components that fetch directly in the RSC render. Server Actions handle mutations. Two Supabase clients are used:
 
-   ```bash
-   pnpm create next-app --example with-supabase with-supabase-app
-   ```
+- **`createClient()`** (cookie-based, respects RLS) — for all user-scoped reads and member-initiated writes
+- **`createAdminClient()`** (service role key, bypasses RLS) — for system-level operations that RLS would incorrectly block: inserting repayment schedules, reading member counts for vote threshold calculation, reading profiles across groups
 
-3. Use `cd` to change into the app's directory
+This distinction matters because Supabase RLS on `profiles` only allows a user to read their own row. Any cross-member profile lookups (borrower names on loan cards, member lists in admin) must go through the admin client.
 
-   ```bash
-   cd with-supabase-app
-   ```
+### Stellar Integration (`lib/stellar.ts`)
 
-4. Rename `.env.example` to `.env.local` and update the following:
+Each entity gets its own Stellar keypair:
 
-  ```env
-  NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
-  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=[INSERT SUPABASE PROJECT API PUBLISHABLE OR ANON KEY]
-  ```
-  > [!NOTE]
-  > This example uses `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, which refers to Supabase's new **publishable** key format.
-  > Both legacy **anon** keys and new **publishable** keys can be used with this variable name during the transition period. Supabase's dashboard may show `NEXT_PUBLIC_SUPABASE_ANON_KEY`; its value can be used in this example.
-  > See the [full announcement](https://github.com/orgs/supabase/discussions/29260) for more information.
+- **User wallet** — provisioned on first login via `/onboarding/wallet`; the user's public key is stored on their profile; the encrypted secret is stored server-side
+- **Group fund account** — provisioned at group creation; funded via Friendbot (testnet), trustline to AMBPHP established, multisig configured with the admin as first signer
 
-  Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` can be found in [your Supabase project's API settings](https://supabase.com/dashboard/project/_?showConnect=true)
+Group accounts use Stellar multisig. When a member joins, their public key is added as a signer with weight 1 and the threshold is updated. Loan disbursement collects enough signer secrets from approvers to meet the on-chain threshold.
 
-5. You can now run the Next.js local development server:
+Stellar API calls are cached per-public-key for 30 seconds using `next/cache` `unstable_cache` to avoid hammering Horizon on every page load. The Horizon client is a module-level singleton to avoid recreating the HTTP connection pool on every request.
 
-   ```bash
-   npm run dev
-   ```
+---
 
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
+## Key Flows
 
-6. This template comes with the default shadcn/ui style initialized. If you instead want other ui.shadcn styles, delete `components.json` and [re-install shadcn/ui](https://ui.shadcn.com/docs/installation/next)
+### 1. Registration & Wallet Provisioning
 
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
+```
+Register → email confirmed → profile row auto-created (DB trigger)
+→ /onboarding/wallet → Stellar keypair generated server-side
+→ Friendbot funds testnet account → AMBPHP trustline established
+→ public key saved to profile, encrypted secret stored server-side
+```
 
-## Feedback and issues
+### 2. Group Creation
 
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
+```
+Fill form (name, cadence, contribution amount, interest rate, vote threshold)
+→ groups row inserted
+→ Stellar keypair generated for the group fund
+→ Friendbot funds group account → AMBPHP trustline → multisig configured
+→ group.stellar_account_id + encrypted secret persisted
+→ creator inserted as first group_member
+→ redirect to group page
+```
 
-## More Supabase examples
+If any Stellar step fails, the groups row is deleted so the user can retry cleanly.
 
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+### 3. Joining via Invite
+
+```
+Admin copies invite link (https://ambagan.site/invite/<token>)
+→ recipient opens link → if not logged in, redirect to /login?invite=<token>
+→ after login, redirect back to /invite/<token>
+→ join button calls server action → group_members row inserted
+→ member's Stellar public key added as on-chain signer → threshold updated
+→ redirect to group dashboard
+```
+
+The invite token is a UUID stored on the `groups` row. Admins can toggle invite links active/inactive from the admin panel.
+
+### 4. Contributions
+
+```
+Member opens group page → ContributeButton shows amount due
+→ server action: contributions row inserted (pending)
+→ AMBPHP payment sent from member's account to group account
+→ contribution status updated to confirmed
+→ group_members.total_contributed incremented
+→ notification created for group
+```
+
+### 5. Loan Request & Voting
+
+```
+Member fills loan request form (amount, purpose, description, repayment months)
+→ live repayment schedule preview calculated client-side
+→ requestLoan server action:
+    - loans row inserted (status: voting, voting_closes_at: +48h)
+    - repayment schedule computed → repayments rows inserted via admin client
+→ loan appears on /loans page for all members
+
+Other members see Approve / Deny buttons on the LoanCard
+→ voteOnLoan server action:
+    - votes row inserted
+    - member count fetched via admin client (bypass RLS for correct count)
+    - approve count vs threshold checked
+    - if threshold met:
+        - borrower's Stellar public key fetched
+        - approvers' encrypted secrets fetched, decrypted
+        - disburseLoan() called: Stellar payment tx signed by group key + approver keys
+        - loan status updated to disbursed + stellar_tx_hash stored
+→ LoanCard updates in real-time via Supabase Realtime subscription
+```
+
+Vote threshold options: `majority` (⌊n/2⌋ + 1), `two_thirds` (⌈2n/3⌉), `unanimous` (n).
+
+### 6. Repayments
+
+```
+Borrower opens /repayments → sees their installment schedule
+→ RepaymentRow: Pay button → server action
+→ AMBPHP payment sent from borrower to group account
+→ repayment row updated (status: paid, paid_at, stellar_tx_hash)
+→ if all installments paid → loan status updated to repaid
+```
+
+### 7. Cycle Distribution
+
+```
+Admin opens /admin/cycle → sees current pot size and ownership breakdown
+→ EndCycleForm → endCycle server action:
+    - ownership percentages computed from all members' total_contributed
+    - payout amounts computed: proportional split, rounding remainder goes to largest stakeholder
+    - distributePot() called: single Stellar tx with one payment op per member (up to 100 ops)
+    - interest_distributions rows inserted
+    - notifications created for each member
+```
+
+### 8. Defaults
+
+Overdue loans progress through a 4-stage escalation tracked on `loans.default_stage`:
+
+| Stage | Trigger | Action |
+|---|---|---|
+| 0 | On time | — |
+| 1 | 7 days overdue | Reminder notification |
+| 2 | 30 days overdue | Formal notice, credit score penalty |
+| 3 | 60 days overdue | Admin review required |
+| 4 | 90 days overdue | Resolution: waive / partial settle / dispute |
+
+The `/admin/defaults` page lets the admin action stage-4 loans. Resolved losses are distributed proportionally across members via `loss_distributions`.
+
+---
+
+## Database Schema (summary)
+
+| Table | Purpose |
+|---|---|
+| `profiles` | User account + Stellar keys + credit score |
+| `groups` | Savings circle config + group Stellar account |
+| `group_members` | Membership join table + contribution stats |
+| `contributions` | Per-cycle payment records |
+| `loans` | Loan requests, status, Stellar disbursement hash |
+| `votes` | Approve/deny votes on loans and extension requests |
+| `repayments` | Installment schedule per loan |
+| `extension_requests` | Borrower requests more time; voted on by group |
+| `default_resolutions` | Admin-actioned outcomes for stage-4 defaults |
+| `loss_distributions` | Per-member loss share from a resolved default |
+| `interest_distributions` | Per-member interest payouts at cycle end |
+| `notifications` | In-app notification feed |
+
+All tables have RLS enabled. Cross-member profile reads (borrower names, member lists) use the service role client server-side.
+
+---
+
+## Credit Score
+
+Each member's score is computed from their activity history (`lib/credit.ts`):
+
+```
+Base: 500
+
+Bonuses (capped):
+  +5 per on-time contribution       (max +200)
+  +30 per loan repaid on schedule   (max +150)
+  +5 per month as member            (max +100)
+
+Penalties (capped):
+  -10 per late contribution         (max -100)
+  -30 per missed contribution       (max -200)
+  -100 per active default           (max -300)
+
+Range: 0–1000  →  A (800+) / B (700+) / C (600+) / D (500+) / F (<500)
+```
+
+The credit grade is displayed on each loan card to help members make informed vote decisions.
+
+---
+
+## Environment Variables
+
+```env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+
+# Stellar
+STELLAR_HORIZON_URL=https://horizon-testnet.stellar.org
+STELLAR_ISSUER_PUBLIC_KEY=
+STELLAR_ISSUER_SECRET_KEY=
+STELLAR_ENCRYPTION_SECRET=        # AES key for encrypting stored Stellar secrets
+
+# App
+NEXT_PUBLIC_APP_URL=https://ambagan.site  # Used for invite link generation
+
+# Email (Resend)
+RESEND_API_KEY=
+```
+
+---
+
+## Local Development
+
+**Prerequisites:** Node.js 20+, pnpm, a Supabase project, a Stellar testnet issuer account.
+
+```bash
+# 1. Install dependencies
+pnpm install
+
+# 2. Copy and fill in environment variables
+cp .env.example .env.local
+
+# 3. Apply database migrations
+# Run the SQL files in supabase/migrations/ in order via the Supabase SQL editor
+# or: supabase db push (if using the Supabase CLI with a linked project)
+
+# 4. Start dev server
+pnpm dev
+```
+
+The app runs on [localhost:3000](http://localhost:3000).
+
+**Run tests:**
+
+```bash
+pnpm test
+```
+
+Tests cover loan math, credit scoring, vote thresholds, cycle distribution, ownership calculations, and notification link generation.
+
+**Test Stellar integration:**
+
+```bash
+pnpm test:stellar
+```
+
+---
+
+## Project Structure
+
+```
+ambagan-/
+├── app/
+│   ├── (app)/          # Authenticated routes
+│   ├── (public)/       # Public routes + auth callbacks
+│   └── api/            # Route handlers (contributions, cron, Stellar account)
+├── components/
+│   ├── group/          # Contribute, invest, ownership, invite, join-with-invite
+│   ├── landing/        # Marketing page sections
+│   ├── nav/            # User + group sidebars
+│   └── ui/             # Base design system components
+├── lib/
+│   ├── stellar.ts      # All Stellar SDK operations
+│   ├── loan-math.ts    # Repayment schedule computation
+│   ├── credit.ts       # Credit score algorithm
+│   ├── group-threshold.ts   # Vote threshold computation
+│   ├── cycle-distribution.ts # Proportional payout split
+│   ├── ownership.ts    # Ownership percentage calculation
+│   └── defaults.ts     # Default escalation stage logic
+├── supabase/migrations/ # Ordered SQL migration files
+└── utils/supabase/     # Supabase client factories (server + client)
+```
