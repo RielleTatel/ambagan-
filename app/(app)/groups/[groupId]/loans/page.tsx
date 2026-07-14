@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
+import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { LoanCard } from './loan-card'
 
 export default async function LoansPage({
@@ -17,9 +18,24 @@ export default async function LoansPage({
 
   const { data: loans } = await supabase
     .from('loans')
-    .select('id, amount, purpose_tag, description, status, borrower_id, voting_closes_at, created_at, profiles:borrower_id(full_name, credit_score)')
+    .select('id, amount, purpose_tag, description, status, borrower_id, voting_closes_at, created_at')
     .eq('group_id', groupId)
     .order('created_at', { ascending: false })
+
+  const borrowerIds = [...new Set((loans ?? []).map((l) => l.borrower_id))]
+  const adminClient = createAdminClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  )
+  const { data: borrowerProfiles } = borrowerIds.length
+    ? await adminClient
+        .from('profiles')
+        .select('id, full_name, credit_score')
+        .in('id', borrowerIds)
+    : { data: [] }
+  const profileMap = new Map(
+    (borrowerProfiles ?? []).map((p) => [p.id as string, { full_name: p.full_name as string | null, credit_score: p.credit_score as number | null }]),
+  )
 
   const loanIds = (loans ?? []).map((l) => l.id)
 
@@ -62,10 +78,11 @@ export default async function LoansPage({
       <ul className="flex flex-col gap-3">
         {(loans ?? []).map((loan: any) => {
           const t = tally.get(loan.id) ?? { approve: 0, deny: 0, mine: false }
+          const profile = profileMap.get(loan.borrower_id) ?? null
           return (
             <LoanCard
               key={loan.id}
-              loan={loan}
+              loan={{ ...loan, profiles: profile }}
               groupId={groupId}
               currentUserId={user.id}
               initialApproveCount={t.approve}
