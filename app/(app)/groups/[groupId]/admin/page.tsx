@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
+import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { SettingsForm } from './settings-form'
 import { InviteControls } from './invite-controls'
 import type { GroupSettingsInput } from './actions'
@@ -31,11 +32,23 @@ export default async function AdminPage({
 
   const { data: members } = await supabase
     .from('group_members')
-    .select(
-      'user_id, joined_at, contribution_streak, total_contributed, profiles:user_id(full_name)',
-    )
+    .select('user_id, joined_at, contribution_streak, total_contributed')
     .eq('group_id', groupId)
     .order('joined_at', { ascending: true })
+
+  const adminClient = createAdminClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  )
+  const memberIds = (members ?? []).map((m) => m.user_id as string)
+  const { data: profiles } = memberIds.length
+    ? await adminClient
+        .from('profiles')
+        .select('id, full_name')
+        .in('id', memberIds)
+    : { data: [] }
+
+  const profileMap = new Map((profiles ?? []).map((p) => [p.id as string, p.full_name as string | null]))
 
   const initial: GroupSettingsInput = {
     groupId: group.id as string,
@@ -112,11 +125,10 @@ export default async function AdminPage({
         ) : (
           <ul className="divide-y-2 divide-border-default">
             {members.map((m) => {
-              const raw = (m as any).profiles?.full_name
-              const isUuid = typeof raw === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(raw)
+              const raw = profileMap.get(m.user_id as string)
               const isCurrentUser = m.user_id === user.id
               const isGroupAdmin = m.user_id === group.admin_id
-              const name = raw && !isUuid ? raw : (isCurrentUser ? 'You' : 'Member')
+              const name = raw || (isCurrentUser ? 'You' : 'Member')
               return (
                 <li
                   key={m.user_id as string}
