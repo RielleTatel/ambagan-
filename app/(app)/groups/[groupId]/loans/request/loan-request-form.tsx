@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useTransition } from 'react'
+import { useState, useMemo, useTransition, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 import { computeRepaymentSchedule } from '@/lib/loan-math'
@@ -34,6 +34,7 @@ export function LoanRequestForm({
   const [months, setMonths] = useState('6')
   const [error, setError] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
+  const submittingRef = useRef(false)
   const router = useRouter()
 
   const schedule = useMemo(() => {
@@ -47,22 +48,28 @@ export function LoanRequestForm({
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (submittingRef.current) return
     setError(null)
     const a = Number(amount)
     if (!a || a <= 0) return setError('Enter an amount greater than 0.')
     if (a > ceiling) return setError(`Amount exceeds your ceiling of ${ceiling} AMBPHP.`)
     if (!description.trim()) return setError('Description is required.')
 
+    submittingRef.current = true
     startTransition(async () => {
-      const result = await requestLoan({
-        groupId,
-        amount: a,
-        purposeTag: purpose,
-        description: description.trim(),
-        repaymentMonths: Number(months),
-      })
-      if (result.ok) router.push(`/groups/${groupId}/loans`)
-      else setError(result.error)
+      try {
+        const result = await requestLoan({
+          groupId,
+          amount: a,
+          purposeTag: purpose,
+          description: description.trim(),
+          repaymentMonths: Number(months),
+        })
+        if (result.ok) router.push(`/groups/${groupId}/loans`)
+        else setError(result.error)
+      } finally {
+        submittingRef.current = false
+      }
     })
   }
 

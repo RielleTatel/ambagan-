@@ -68,6 +68,17 @@ export async function requestLoan(input: {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
   )
+
+  // Idempotency guard — skip if repayments already exist for this loan
+  const { count: existingCount } = await adminClient
+    .from('repayments')
+    .select('id', { count: 'exact', head: true })
+    .eq('loan_id', loan.id)
+  if ((existingCount ?? 0) > 0) {
+    revalidatePath(`/groups/${input.groupId}/loans`)
+    return { ok: true, loanId: loan.id }
+  }
+
   const { error: repayErr } = await adminClient.from('repayments').insert(
     schedule.map((s) => ({
       loan_id: loan.id,
@@ -116,7 +127,11 @@ export async function voteOnLoan(input: {
     .single()
   if (!group) return { ok: false, error: 'Group not found' }
 
-  const { count: memberCount } = await supabase
+  const adminClient = createAdminClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  )
+  const { count: memberCount } = await adminClient
     .from('group_members')
     .select('id', { count: 'exact', head: true })
     .eq('group_id', input.groupId)
