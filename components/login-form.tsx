@@ -16,10 +16,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+type LoginFormProps = React.ComponentPropsWithoutRef<"div"> & {
+  inviteToken?: string
+}
+
 export function LoginForm({
   className,
+  inviteToken,
   ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+}: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -38,8 +43,7 @@ export function LoginForm({
         password,
       });
       if (error) throw error;
-      // Update this route to redirect to an authenticated route. The user already has an active session.
-      router.push("/dashboard");
+      router.push(inviteToken ? `/invite/${inviteToken}` : "/dashboard");
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
@@ -99,7 +103,10 @@ export function LoginForm({
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
-              <Link href="/register" className="underline underline-offset-4">
+              <Link
+                href={inviteToken ? `/register?invite=${inviteToken}` : "/register"}
+                className="underline underline-offset-4"
+              >
                 Sign up
               </Link>
             </div>

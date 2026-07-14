@@ -16,7 +16,7 @@ export default async function InvitePage({
 
   // Unauthenticated visitor → send to register with token preserved.
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect(`/register?invite=${encodeURIComponent(token)}`)
+  if (!user) redirect(`/login?invite=${encodeURIComponent(token)}`)
 
   // Look up group; RLS won't help here (visitor isn't a member yet), so
   // this select relies on invite_token being unique + non-secret enough.
