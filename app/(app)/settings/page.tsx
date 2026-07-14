@@ -73,10 +73,11 @@ export default async function SettingsPage() {
         </p>
       </section>
 
-      <section className="rounded-xl border-2 border-border-danger bg-neutral-primary p-6 shadow-xs">
+      <section className="rounded-xl border-2 border-border-danger bg-neutral-primary p-6 shadow-xs mt-6">
         <h2 className="mb-1 text-lg font-bold text-heading">Sign out</h2>
         <p className="mb-4 text-sm text-body-subtle">You will be returned to the login page.</p>
-        <LogoutButton />
+        <LogoutButton /> 
+        
       </section>
     </main>
   )
