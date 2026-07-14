@@ -1,13 +1,17 @@
 import * as StellarSdk from '@stellar/stellar-sdk'
 import CryptoJS from 'crypto-js'
+import { unstable_cache } from 'next/cache'
 
 // ─── Config ───────────────────────────────────────────────
 const NETWORK_PASSPHRASE = StellarSdk.Networks.TESTNET
 
-// Lazy getters so missing env vars don't crash the module at import time —
-// they only throw when an actual Stellar operation is attempted.
+// Singleton Horizon server — avoids recreating the HTTP client on every call.
+let _horizonServer: StellarSdk.Horizon.Server | null = null
 function getHorizonServer() {
-  return new StellarSdk.Horizon.Server(process.env.STELLAR_HORIZON_URL!)
+  if (!_horizonServer) {
+    _horizonServer = new StellarSdk.Horizon.Server(process.env.STELLAR_HORIZON_URL!)
+  }
+  return _horizonServer
 }
 function getEncryptionSecret() {
   return process.env.STELLAR_ENCRYPTION_SECRET!
@@ -58,8 +62,9 @@ export async function loadAccount(publicKey: string) {
   return horizonServer.loadAccount(publicKey)
 }
 
-// Get AMBPHP balance for an account
-export async function getAMBPHPBalance(publicKey: string): Promise<string> {
+// Get AMBPHP balance for an account — cached for 30 seconds per public key.
+// Balance is public on-chain data so caching across users is safe.
+async function fetchAMBPHPBalance(publicKey: string): Promise<string> {
   const account = await horizonServer.loadAccount(publicKey)
   const balance = account.balances.find(
     (b: any) =>
@@ -69,6 +74,12 @@ export async function getAMBPHPBalance(publicKey: string): Promise<string> {
   )
   return balance ? balance.balance : '0'
 }
+
+export const getAMBPHPBalance = unstable_cache(
+  fetchAMBPHPBalance,
+  ['ambphp-balance'],
+  { revalidate: 30 },
+)
 
 // ─── Trustline ────────────────────────────────────────────
 

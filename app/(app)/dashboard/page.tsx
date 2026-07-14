@@ -59,26 +59,21 @@ export default async function DashboardPage() {
 
   const groupIds = groups.map((g) => g.id)
 
-  // Parallel: per-group balances + member counts + cross-group queries
-  const [enriched, activeLoansRes, thisMonthRes, allContribsRes, allGroupContribsRes, notificationsRes] = await Promise.all([
-    // Per-group card data
+  // Parallel: all queries fire at once
+  const [balances, allMembersRes, activeLoansRes, thisMonthRes, allContribsRes, allGroupContribsRes, notificationsRes] = await Promise.all([
+    // Stellar balances — one per group, all in parallel, cached 30s each
     Promise.all(
-      groups.map(async (g) => {
-        const [balance, memberCountRes] = await Promise.all([
-          g.stellar_account_id
-            ? getAMBPHPBalance(g.stellar_account_id).catch(() => '—')
-            : Promise.resolve('0'),
-          supabase.from('group_members').select('id', { count: 'exact', head: true }).eq('group_id', g.id),
-        ])
-        return {
-          id: g.id,
-          name: g.name,
-          description: g.description,
-          balance,
-          memberCount: memberCountRes.count ?? 0,
-        }
-      }),
+      groups.map((g) =>
+        g.stellar_account_id
+          ? getAMBPHPBalance(g.stellar_account_id).catch(() => '—')
+          : Promise.resolve('0'),
+      ),
     ),
+
+    // Single bulk member count query instead of one per group
+    groupIds.length
+      ? supabase.from('group_members').select('group_id').in('group_id', groupIds)
+      : Promise.resolve({ data: [] }),
 
     // Active loans across all user's groups
     groupIds.length
@@ -121,6 +116,22 @@ export default async function DashboardPage() {
       .order('created_at', { ascending: false })
       .limit(20),
   ])
+
+  // Build member count map from bulk query
+  const memberCountMap = new Map<string, number>()
+  for (const row of allMembersRes.data ?? []) {
+    const gid = row.group_id as string
+    memberCountMap.set(gid, (memberCountMap.get(gid) ?? 0) + 1)
+  }
+
+  // Combine group data with balances and member counts
+  const enriched = groups.map((g, i) => ({
+    id: g.id,
+    name: g.name,
+    description: g.description,
+    balance: balances[i],
+    memberCount: memberCountMap.get(g.id) ?? 0,
+  }))
 
   // Derived stats
   const totalCommunityValue = enriched.reduce((sum, g) => {
