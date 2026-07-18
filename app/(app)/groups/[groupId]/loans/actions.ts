@@ -212,7 +212,7 @@ export async function voteOnLoan(input: {
       return { ok: false, error: `Disbursement failed: ${(err as Error).message}` }
     }
 
-    await supabase
+    const { error: updateErr } = await adminClient
       .from('loans')
       .update({
         status: 'disbursed',
@@ -221,6 +221,7 @@ export async function voteOnLoan(input: {
         stellar_tx_hash: disbursementHash,
       })
       .eq('id', input.loanId)
+    if (updateErr) return { ok: false, error: `Failed to update loan status: ${updateErr.message}` }
   }
 
   revalidatePath(`/groups/${input.groupId}/loans`)
