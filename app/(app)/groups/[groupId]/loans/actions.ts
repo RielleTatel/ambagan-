@@ -223,8 +223,12 @@ export async function voteOnLoan(input: {
         extraSecrets,
       )
       disbursementHash = result.hash
-    } catch (err) {
-      return { ok: false, error: `Disbursement failed: ${(err as Error).message}` }
+    } catch (err: any) {
+      const resultCodes = err?.response?.data?.extras?.result_codes
+      const detail = resultCodes
+        ? JSON.stringify(resultCodes)
+        : (err as Error).message
+      return { ok: false, error: `Disbursement failed: ${detail}` }
     }
 
     const { error: updateErr } = await adminClient
