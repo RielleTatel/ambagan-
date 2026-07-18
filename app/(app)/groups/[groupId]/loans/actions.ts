@@ -113,12 +113,15 @@ export async function voteOnLoan(input: {
     .single()
   if (!membership) return { ok: false, error: 'Not a member' }
 
-  const { error: voteErr } = await supabase.from('votes').upsert({
+  const { error: voteErr } = await supabase.from('votes').insert({
     loan_id: input.loanId,
     voter_id: user.id,
     vote: input.vote,
-  }, { onConflict: 'loan_id,voter_id' })
-  if (voteErr) return { ok: false, error: `Vote insert failed: ${voteErr.message}` }
+  })
+  // 23505 = unique_violation: vote already recorded (network retry) — safe to continue
+  if (voteErr && voteErr.code !== '23505') {
+    return { ok: false, error: `Vote insert failed: ${voteErr.message}` }
+  }
 
   const { data: group } = await supabase
     .from('groups')
