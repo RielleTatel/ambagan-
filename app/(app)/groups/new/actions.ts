@@ -8,6 +8,7 @@ import {
   fundTestnetAccount,
   establishTrustline,
   setupGroupMultisig,
+  mintAMBPHP,
 } from '@/lib/stellar'
 
 export type Cadence = 'weekly' | 'biweekly' | 'monthly'
@@ -90,6 +91,7 @@ export async function createGroup(input: CreateGroupInput): Promise<CreateGroupR
     const { publicKey, secretKey } = generateKeypair()
     await fundTestnetAccount(publicKey)
     await establishTrustline(secretKey)
+    await mintAMBPHP(publicKey, '1000000') // seed test group fund with ₱1,000,000
     await setupGroupMultisig(secretKey, [profile.stellar_public_key], 1)
 
     // 3. Persist Stellar identity + encrypted secret on the group.

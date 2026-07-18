@@ -151,15 +151,6 @@ export async function voteOnLoan(input: {
   )
   const approved = (approveCount ?? 0) >= threshold
 
-  console.log('[voteOnLoan]', {
-    loanId: input.loanId,
-    memberCount,
-    approveCount,
-    threshold,
-    approved,
-    voteThreshold: group.vote_threshold,
-  })
-
   if (approved) {
     const { data: loan } = await supabase
       .from('loans')
@@ -203,12 +194,6 @@ export async function voteOnLoan(input: {
       .filter((s: string | null | undefined): s is string => Boolean(s))
       .map(decryptSecret)
 
-    console.log('[voteOnLoan] disbursement', {
-      extraNeeded,
-      approversFound: approvers?.length ?? 0,
-      secretsFound: extraSecrets.length,
-    })
-
     if (extraSecrets.length < extraNeeded) {
       return { ok: false, error: 'Not enough signer secrets available for disbursement' }
     }
@@ -241,6 +226,14 @@ export async function voteOnLoan(input: {
       })
       .eq('id', input.loanId)
     if (updateErr) return { ok: false, error: `Failed to update loan status: ${updateErr.message}` }
+
+    await adminClient.from('notifications').insert({
+      user_id: loan.borrower_id,
+      group_id: input.groupId,
+      type: 'loan_disbursed',
+      message: `Your loan of ${loan.amount} AMBPHP has been approved and disbursed to your wallet. Go to Repayments to view your installment schedule.`,
+      read: false,
+    })
   }
 
   revalidatePath(`/groups/${input.groupId}/loans`)
