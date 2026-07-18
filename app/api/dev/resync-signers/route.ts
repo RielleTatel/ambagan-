@@ -5,19 +5,24 @@ import { decryptSecret, resyncGroupSigners } from '@/lib/stellar'
 import { computeThreshold } from '@/lib/group-threshold'
 import type { VoteThreshold } from '@/lib/group-threshold'
 
-// DEV ONLY — re-register all members as Stellar signers on the group account.
+// Admin-only — re-register all members as Stellar signers on the group account.
 // Hit: POST /api/dev/resync-signers  body: { groupId }
 export async function POST(req: Request) {
-  if (process.env.NODE_ENV === 'production') {
-    return NextResponse.json({ error: 'Not available in production' }, { status: 403 })
-  }
-
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthenticated' }, { status: 401 })
 
   const { groupId } = await req.json()
   if (!groupId) return NextResponse.json({ error: 'groupId required' }, { status: 400 })
+
+  const { data: membership } = await supabase
+    .from('groups')
+    .select('admin_id')
+    .eq('id', groupId)
+    .single()
+  if (!membership || membership.admin_id !== user.id) {
+    return NextResponse.json({ error: 'Only the group admin can resync signers' }, { status: 403 })
+  }
 
   const adminClient = createAdminClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
