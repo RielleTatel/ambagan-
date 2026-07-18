@@ -172,7 +172,7 @@ export async function voteOnLoan(input: {
       return { ok: false, error: 'Group Stellar account not provisioned' }
     }
 
-    const { data: borrowerProfile } = await supabase
+    const { data: borrowerProfile } = await adminClient
       .from('profiles')
       .select('stellar_public_key')
       .eq('id', loan.borrower_id)
