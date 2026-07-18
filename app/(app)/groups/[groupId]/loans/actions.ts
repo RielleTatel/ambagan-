@@ -179,7 +179,7 @@ export async function voteOnLoan(input: {
     }
 
     const extraNeeded = Math.max(0, threshold - 1)
-    const { data: approvers } = await supabase
+    const { data: approvers } = await adminClient
       .from('votes')
       .select('voter_id, profiles:voter_id(stellar_secret_encrypted)')
       .eq('loan_id', input.loanId)
