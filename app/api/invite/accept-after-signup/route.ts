@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
+import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { decryptSecret, addGroupSignerAndUpdateThreshold } from '@/lib/stellar'
 import { computeThreshold } from '@/lib/group-threshold'
 
@@ -55,7 +56,11 @@ export async function POST(req: Request) {
     const groupSecret = decryptSecret(group.stellar_secret_encrypted)
     let adminSecret: string | undefined
     if (memberCount > 2) {
-      const { data: adminProfile } = await supabase
+      const adminClient = createAdminClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      )
+      const { data: adminProfile } = await adminClient
         .from('profiles')
         .select('stellar_secret_encrypted')
         .eq('id', group.admin_id)

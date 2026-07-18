@@ -311,6 +311,49 @@ export async function disburseLoan(
   return { hash: result.hash }
 }
 
+// Re-add any missing members as signers and re-set the threshold.
+// Used to fix groups where member joins failed the Stellar sync step.
+export async function resyncGroupSigners(
+  groupSecret: string,
+  allMemberPublicKeys: string[],
+  threshold: number,
+  adminSecret?: string,
+): Promise<{ hash: string }> {
+  const groupKp = StellarSdk.Keypair.fromSecret(groupSecret)
+  const account = await horizonServer.loadAccount(groupKp.publicKey())
+
+  const currentSignerKeys = new Set(account.signers.map((s: any) => s.key))
+  const missing = allMemberPublicKeys.filter((pk) => !currentSignerKeys.has(pk))
+
+  const builder = new StellarSdk.TransactionBuilder(account, {
+    fee: StellarSdk.BASE_FEE,
+    networkPassphrase: NETWORK_PASSPHRASE,
+  })
+
+  for (const pk of missing) {
+    builder.addOperation(
+      StellarSdk.Operation.setOptions({
+        signer: { ed25519PublicKey: pk, weight: 1 },
+      }),
+    )
+  }
+
+  builder.addOperation(
+    StellarSdk.Operation.setOptions({
+      lowThreshold: threshold,
+      medThreshold: threshold,
+      highThreshold: threshold,
+    }),
+  )
+
+  const tx = builder.setTimeout(30).build()
+  tx.sign(groupKp)
+  if (adminSecret) tx.sign(StellarSdk.Keypair.fromSecret(adminSecret))
+
+  const result = await horizonServer.submitTransaction(tx)
+  return { hash: result.hash }
+}
+
 // Distribute the group's AMBPHP pot to a list of recipients in a single tx.
 // Group master key signs alone (threshold = 1 from setupGroupMultisig).
 // Stellar limits ops per tx to 100; assumes groups have < 100 members.
