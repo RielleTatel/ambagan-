@@ -151,6 +151,15 @@ export async function voteOnLoan(input: {
   )
   const approved = (approveCount ?? 0) >= threshold
 
+  console.log('[voteOnLoan]', {
+    loanId: input.loanId,
+    memberCount,
+    approveCount,
+    threshold,
+    approved,
+    voteThreshold: group.vote_threshold,
+  })
+
   if (approved) {
     const { data: loan } = await supabase
       .from('loans')
@@ -193,6 +202,12 @@ export async function voteOnLoan(input: {
       .map((a: any) => a.profiles?.stellar_secret_encrypted)
       .filter((s: string | null | undefined): s is string => Boolean(s))
       .map(decryptSecret)
+
+    console.log('[voteOnLoan] disbursement', {
+      extraNeeded,
+      approversFound: approvers?.length ?? 0,
+      secretsFound: extraSecrets.length,
+    })
 
     if (extraSecrets.length < extraNeeded) {
       return { ok: false, error: 'Not enough signer secrets available for disbursement' }
