@@ -113,11 +113,11 @@ export async function voteOnLoan(input: {
     .single()
   if (!membership) return { ok: false, error: 'Not a member' }
 
-  const { error: voteErr } = await supabase.from('votes').insert({
+  const { error: voteErr } = await supabase.from('votes').upsert({
     loan_id: input.loanId,
     voter_id: user.id,
     vote: input.vote,
-  })
+  }, { onConflict: 'loan_id,voter_id' })
   if (voteErr) return { ok: false, error: `Vote insert failed: ${voteErr.message}` }
 
   const { data: group } = await supabase
